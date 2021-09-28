@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  width: 100%;
+  font-size: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.nav-bar {
+  list-style-type: none;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+
+  .nav-bar--left {
+    display: flex;
+
+  }
+
+  .nav-bar--right {
+    display: flex;
+    margin-left: auto;
+
+  }
+
+}
+
+.nav-item {
+  padding: 1rem;
+  cursor: pointer;
+
+  &--selected {
+    background-color: $color-primary-dark;
+    color: $color-off-white
+  }
+
+  &:hover, &:active {
+    background-color: $color-primary;
+    color: $color-off-white
+  }
+}

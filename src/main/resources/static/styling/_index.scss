@@ -1,0 +1,35 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+
+}
+
+.lists {
+  width: 80%;
+  margin-bottom: 2.5rem;
+}
+
+.all-shared-lists {
+}
+
+.my-lists {
+
+}
+
+.list-container {
+  border-radius: 1rem;
+  border: 1px solid black;
+  margin: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}

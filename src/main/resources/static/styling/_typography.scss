@@ -1,0 +1,45 @@
+.heading-1 {
+  padding-left: 1rem;
+  padding-bottom: 2rem;
+  font-size: 3rem;
+}
+
+.heading-2 {
+  padding-left: 1rem;
+  padding-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.heading-3 {
+  padding-left: 1rem;
+  padding-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.heading-4 {
+  padding-bottom: 1rem;
+  font-size: 1.6rem;
+}
+
+.paragraph {
+  font-size: 1.6rem;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+}
+
+.form-msg {
+  font-size: 1.6rem;
+  position: relative;
+  visibility: hidden;
+  //top: 1rem;
+
+  &--success {
+    color: $color-success;
+    visibility: visible;
+  }
+
+  &--error {
+    color: $color-danger;
+    visibility: visible;
+  }
+}

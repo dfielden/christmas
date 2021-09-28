@@ -1,0 +1,86 @@
+// COLOR VARIABLES
+$color-primary: #ac3d00;
+$color-primary-light: #faae7e;
+$color-primary-dark: #502102;
+$color-primary-faint: #f6c2a3;
+
+$color-secondary: #f5ca4d;
+$color-secondary-light: #fce9b9;
+
+$color-success: #007d26;
+$color-danger: #e91235;
+
+$color-off-white: #fdfdfd;
+$color-grey-lightest: #c5c5c5;
+$color-grey-light: #e8e8e8;
+$color-grey: #a4a4a4;
+$color-grey-dark: #7c7c7c;
+$color-grey-darkest: #474747;
+$color-black: #000000;
+
+$gradient-primary: linear-gradient(145deg, rgba($color-primary,1) 0%, rgba($color-primary-light,1) 100%);
+$gradient-secondary: linear-gradient(145deg, rgba($color-secondary, 0.8) 0%, rgba($color-secondary-light,0.8) 100%);
+//$gradient-black: linear-gradient(145deg, rgba($color-black, 0.8) 0%, rgba($color-grey-dark,0.8) 100%);
+
+
+// FONT VARIABLES
+$font-primary: 'Neuton', serif;
+$font-display: 'Nanum Gothic', sans-serif;
+
+
+// BREAK POINTS
+$break-tiny: 280px;
+$break-smallest: 400px;
+$break-small: 600px;
+$break-medium: 900px;
+$break-large: 1260px;
+$break-largest: 1500px;
+
+/*Universal declaration - will apply these settings to all elements, also select all before and after pseudoelements - prevents strange behaviour*/
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: inherit; /*forcing inheritance on each element from body - this is considered good practice*/
+}
+
+html {
+  font-size: 62.5%; /*1rem = 10px*/
+  height: 100%;
+  font-family: $font-primary;
+  //color: $color-primary-dark;
+}
+
+body {
+  box-sizing: border-box; /*changes box model so that borders and paddings are not added to total width/height specified for a box*/
+  //padding: 2rem; /* padding around body - not inherited to other elements*/
+  height: 100%;
+  width: 100%;
+  background: $gradient-secondary;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 2rem;
+}
+
+// Required to stop img stretching on iPhone
+img {
+  align-self: center;
+  height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+
