@@ -2,11 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My list</title>
+  <title>My list</title>  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
+  <link rel="stylesheet" href="styling/main.css">
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
 </head>
 <body>
+
+<div class="header">
+  <ul class="nav-bar">
+    <div class="nav-bar--left">
+      <a href="/"><li class="nav-item" id="home">Home</li></a>
+      <a href="/new"><li class="nav-item" id="new-item-form">Add new item</li></a>
+
+
+    </div>
+    <div class="nav-bar--right">
+      <a href="/logout"><li class="nav-item" id="logout">Logout</li></a>
+    </div>
+  </ul>
+</div>
+
 <div class="list-table">
-  <div class="row header">
+  <div class="row top-row">
     <div class="cell cell-header item">Item</div>
     <div class="cell cell-header price">Price</div>
     <div class="cell cell-header location">Shop</div>
@@ -14,13 +31,65 @@
     <div class="cell cell-header additional-info">Additional info</div>
   </div>
   <div class="row">
-    <div class="cell item"></div>
-    <div class="cell price"></div>
-    <div class="cell location"></div>
-    <div class="cell link">Link/URL</div>
-    <div class="cell additional-info"></div>
+    <div class="cell product"> A good book, paperback, by An Author</div>
+    <div class="cell price">£5.99</div>
+    <div class="cell location">Amazon</div>
+    <div class="cell link">www.amazon.co.uk</div>
+    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
+  </div>
+  <div class="row">
+    <div class="cell product"> A good book, paperback, by An Author</div>
+    <div class="cell price">£5.99</div>
+    <div class="cell location">Amazon</div>
+    <div class="cell link">www.amazon.co.uk</div>
+    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
+  </div>
+  <div class="row">
+    <div class="cell product"> A good book, paperback, by An Author</div>
+    <div class="cell price">£5.99</div>
+    <div class="cell location">Amazon</div>
+    <div class="cell link">www.amazon.co.uk</div>
+    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
   </div>
 
 </div>
+
+<button type="button" class="btn btn--primary center" id="new-item">Add new item</button>
+
+<div class="new-entry display-none">
+  <div class="overlay form__close"></div>
+  <form class="form">
+    <div class="form-heading">
+      <h2 class="heading-2">Add new entry</h2>
+      <div class="form__close cross">&times;</div>
+    </div>
+    <div class="input-container">
+      <label for="input-product" class="form-label">Item/item</label>
+      <input type="text" required autocomplete="off" class="form-input" name="input-product" id="input-product">
+    </div>
+    <div class="input-container">
+      <label for="input-price" class="form-label">Price (£)</label>
+      <input type="number" autocomplete="off" class="form-input" name="input-price" id="input-price">
+    </div>
+    <div class="input-container">
+      <label for="input-location" class="form-label">Available from</label>
+      <input type="text" autocomplete="off" class="form-input" name="input-location" id="input-location">
+    </div>
+    <div class="input-container">
+      <label for="input-url" class="form-label">Link/URL</label>
+      <input type="text" autocomplete="off" class="form-input" name="input-url" id="input-url">
+    </div>
+    <div class="input-container">
+      <label for="input-info" class="form-label">Additional info</label>
+      <textarea class="form-input text-area" name="input-info" id="input-info"></textarea>
+    </div>
+    <p class="paragraph form-msg">Message</p>
+
+    <button type="button" class="btn btn--primary" id="submit-item">Submit</button>
+
+  </form>
+
+</div>
+<script type="module" src="/javascript/mylist.js"></script>
 </body>
 </html>

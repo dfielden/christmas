@@ -1,0 +1,30 @@
+.list-table {
+  display: flex;
+  flex-direction: column;
+  border-collapse: collapse;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto 2rem auto;
+  border-bottom: 1px solid black;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%
+}
+
+.top-row {
+  background-color: $color-primary-dark;
+  color: $color-off-white;
+  text-align: left;
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  flex: 1;
+  flex-basis: calc(100% / 5);
+  padding: 1rem;
+  align-self: center;
+}
