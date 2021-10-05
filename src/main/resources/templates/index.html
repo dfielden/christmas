@@ -18,18 +18,17 @@
             </div>
         </ul>
     </div>
-    <h1 class="heading-1">Christmas</h1>
+    <h1 class="heading-1">Gift ideas</h1>
 
     <div class="main">
 
         <div class="lists my-lists">
-            <h2 class="heading-2">My lists</h2>
-            <div class="list-container">
-                <div class="list-container--header">
-                    <h4 class="heading-4">Daniel's Christmas list</h4>
-                </div>
-                <div class="list-created-on">Created on: December 12 2021</div>
+            <div class="my-lists-header">
+                <h2 class="heading-2">My lists</h2>
+                <div class="link link--right">Create new list</div>
             </div>
+
+
         </div>
 
         <div class="lists all-shared-lists">
@@ -57,5 +56,25 @@
             </div>
         </div>
     </div>
+
+    <div class="new-list display-none">
+        <div class="overlay form__close"></div>
+        <form class="form">
+            <div class="form-heading">
+                <h2 class="heading-2">Create new list</h2>
+                <div class="form__close cross">&times;</div>
+            </div>
+            <div class="input-container">
+                <label for="input-title" class="form-label">List title</label>
+                <input type="email" required autocomplete="off" class="form-input" name="input-title" id="input-title">
+            </div>
+
+            <p class="paragraph form-msg">Message</p>
+
+            <button type="button" class="btn btn--primary" id="create-list">Create list!</button>
+
+        </form>
+    </div>
+    <script type="module" src="/javascript/index.js"></script>
 </body>
 </html>

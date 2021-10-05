@@ -27,6 +27,15 @@
   padding-bottom: 1rem;
 }
 
+.link {
+  color: blue;
+  cursor: pointer;
+
+  &--right {
+    float: right;
+  }
+}
+
 .form-msg {
   font-size: 1.6rem;
   position: relative;

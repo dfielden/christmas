@@ -66,6 +66,21 @@ a:hover {
   background-color: #502102;
   color: #fdfdfd;
 }
+.btn--danger {
+  background-color: #e91235;
+  color: #fdfdfd;
+}
+.btn--grey-light {
+  background-color: #e8e8e8;
+  color: #000000;
+}
+.btn--table {
+  width: 80%;
+  max-width: 5rem;
+  height: 2rem;
+  align-self: center;
+  margin: 0.4rem;
+}
 
 .center {
   margin: 0 auto;
@@ -84,6 +99,7 @@ a:hover {
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
   z-index: 10;
+  max-width: 110rem;
 }
 
 .form-heading {
@@ -217,6 +233,12 @@ a:hover {
   margin-bottom: 2.5rem;
 }
 
+.my-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .list-container {
   border-radius: 1rem;
   border: 1px solid black;
@@ -261,6 +283,11 @@ a:hover {
   align-self: center;
 }
 
+.btn-cell {
+  display: flex;
+  flex-direction: column;
+}
+
 .heading-1 {
   padding-left: 1rem;
   padding-bottom: 2rem;
@@ -288,6 +315,14 @@ a:hover {
   font-size: 1.6rem;
   padding-left: 1rem;
   padding-bottom: 1rem;
+}
+
+.link {
+  color: blue;
+  cursor: pointer;
+}
+.link--right {
+  float: right;
 }
 
 .form-msg {

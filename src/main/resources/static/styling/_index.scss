@@ -19,6 +19,11 @@
 .my-lists {
 
 }
+.my-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .list-container {
   border-radius: 1rem;

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
+    <link rel="stylesheet" href="styling/main.css">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <title>Signup</title>
+</head>
+<body>
+<div class="new-entry">
+    <form class="form">
+        <div class="form-heading">
+            <h2 class="heading-2">Login</h2>
+            <div class="form__close cross"></div>
+        </div>
+        <div class="input-container">
+            <label for="input-username" class="form-label">Username</label>
+            <input type="text" required autocomplete="off" class="form-input" name="input-email" id="input-username">
+        </div>
+        <div class="input-container">
+            <label for="input-email" class="form-label">email address</label>
+            <input type="email" required autocomplete="off" class="form-input" name="input-email" id="input-email">
+        </div>
+        <div class="input-container">
+            <label for="input-password-1" class="form-label">Password</label>
+            <input type="password" required autocomplete="off" class="form-input" name="input-password-1" id="input-password-1">
+        </div>
+        <div class="input-container">
+            <label for="input-password-2" class="form-label">Password</label>
+            <input type="password" required autocomplete="off" class="form-input" name="input-password-2" id="input-password-2">
+        </div>
+
+        <p class="paragraph form-msg">Message</p>
+
+        <button type="button" class="btn btn--primary" id="signup">Submit</button>
+
+    </form>
+</div>
+<script type="module" src="/javascript/signup.js"></script>
+</body>
+</html>

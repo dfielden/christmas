@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
+  <link rel="stylesheet" href="styling/main.css">
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+  <title>Login</title>
+</head>
+<body>
+<div class="new-entry">
+  <form class="form">
+    <div class="form-heading">
+      <h2 class="heading-2">Login</h2>
+      <div class="form__close cross"></div>
+    </div>
+    <div class="input-container">
+      <label for="input-email" class="form-label">email address</label>
+      <input type="email" required autocomplete="on" class="form-input" name="input-email" id="input-email">
+    </div>
+    <div class="input-container">
+      <label for="input-password" class="form-label">Password</label>
+      <input type="password" required autocomplete="off" class="form-input" name="input-password" id="input-password">
+    </div>
+
+    <p class="paragraph form-msg">Message</p>
+
+    <button type="button" class="btn btn--primary" id="login">Submit</button>
+
+    <p class="paragraph">Don't have an account? <a class="link" href="/signup">Sign up here</a> </p>
+  </form>
+</div>
+<script type="module" src="/javascript/login.js"></script>
+</body>
+</html>

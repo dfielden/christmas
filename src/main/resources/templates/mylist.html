@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>My list</title>  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
-  <link rel="stylesheet" href="styling/main.css">
+  <link rel="stylesheet" href="../styling/main.css">
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
 </head>
 <body>
@@ -12,7 +12,6 @@
   <ul class="nav-bar">
     <div class="nav-bar--left">
       <a href="/"><li class="nav-item" id="home">Home</li></a>
-      <a href="/new"><li class="nav-item" id="new-item-form">Add new item</li></a>
 
 
     </div>
@@ -22,34 +21,17 @@
   </ul>
 </div>
 
+<h1 class="heading-1"></h1>
+
 <div class="list-table">
   <div class="row top-row">
     <div class="cell cell-header item">Item</div>
     <div class="cell cell-header price">Price</div>
     <div class="cell cell-header location">Shop</div>
-    <div class="cell cell-header link">Link/URL</div>
+    <div class="cell cell-header">Link/URL</div>
     <div class="cell cell-header additional-info">Additional info</div>
-  </div>
-  <div class="row">
-    <div class="cell product"> A good book, paperback, by An Author</div>
-    <div class="cell price">£5.99</div>
-    <div class="cell location">Amazon</div>
-    <div class="cell link">www.amazon.co.uk</div>
-    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
-  </div>
-  <div class="row">
-    <div class="cell product"> A good book, paperback, by An Author</div>
-    <div class="cell price">£5.99</div>
-    <div class="cell location">Amazon</div>
-    <div class="cell link">www.amazon.co.uk</div>
-    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
-  </div>
-  <div class="row">
-    <div class="cell product"> A good book, paperback, by An Author</div>
-    <div class="cell price">£5.99</div>
-    <div class="cell location">Amazon</div>
-    <div class="cell link">www.amazon.co.uk</div>
-    <div class="cell additional-info">I would like the paperback but the hardback is also ok</div>
+    <div class="cell cell-header additional-info">Edit/delete</div>
+
   </div>
 
 </div>
@@ -58,10 +40,14 @@
 
 <div class="new-entry display-none">
   <div class="overlay form__close"></div>
-  <form class="form">
+  <form class="form form-add-edit">
     <div class="form-heading">
-      <h2 class="heading-2">Add new entry</h2>
+      <h2 class="heading-2 header-add-edit">Add new entry</h2>
       <div class="form__close cross">&times;</div>
+    </div>
+    <div class="input-container">
+      <label for="id" class="form__label" style="display:none">id</label>
+      <input type="hidden" step="1" class="form__input" placeholder="id" id="id" name="id" value="-1">
     </div>
     <div class="input-container">
       <label for="input-product" class="form-label">Item/item</label>
@@ -86,6 +72,7 @@
     <p class="paragraph form-msg">Message</p>
 
     <button type="button" class="btn btn--primary" id="submit-item">Submit</button>
+    <button type="button" class="btn btn--primary display-none" id="edit-item">Update</button>
 
   </form>
 

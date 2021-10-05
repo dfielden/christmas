@@ -26,6 +26,25 @@
     background-color: $color-primary-dark;
     color: $color-off-white;
   }
+
+  &--danger {
+    background-color: $color-danger;
+    color: $color-off-white;
+  }
+
+  &--grey-light {
+    background-color: $color-grey-light;
+    color: $color-black;
+  }
+
+  &--table {
+    width: 80%;
+    max-width: 5rem;
+    height: 2rem;
+    align-self: center;
+    margin: 0.4rem;
+  }
+
 }
 
 .center {
