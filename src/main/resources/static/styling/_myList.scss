@@ -1,9 +1,20 @@
+.main-container {
+  display: flex;
+  width: 90%;
+}
+
+.share-with {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
 .list-table {
   display: flex;
   flex-direction: column;
   border-collapse: collapse;
   align-items: center;
-  width: 80%;
+  width: 70%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
 }
@@ -32,4 +43,40 @@
 .btn-cell {
   display: flex;
   flex-direction: column;
+}
+
+.email-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-container {
+  display: flex;
+  height: 4.5rem;
+  border: 1px solid black;
+  justify-content: space-between;
+  align-items: center;
+
+  &--left {
+    display: flex;
+    align-items: center;
+  }
+
+  &--right {
+    display: flex;
+  }
+
+  .fas {
+    font-size: 1.6rem;
+    padding: 1.6rem;
+  }
+}
+
+.email-address {
+  font-size: 1.6rem;
+
+}
+
+.fa-trash {
+  cursor: pointer;
 }

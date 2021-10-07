@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>My list</title>  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
   <link rel="stylesheet" href="../styling/main.css">
-  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico">
+  <script src="https://kit.fontawesome.com/558b08b205.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -22,18 +23,26 @@
 </div>
 
 <h1 class="heading-1"></h1>
-
-<div class="list-table">
-  <div class="row top-row">
-    <div class="cell cell-header item">Item</div>
-    <div class="cell cell-header price">Price</div>
-    <div class="cell cell-header location">Shop</div>
-    <div class="cell cell-header">Link/URL</div>
-    <div class="cell cell-header additional-info">Additional info</div>
-    <div class="cell cell-header additional-info">Edit/delete</div>
-
+<div class="main-container">
+  <div class="share-with">
+    <form class="single-row-form" id="email-form">
+      <input class="input" id="input-email" type="email" placeholder="Enter email address here">
+      <button class="btn btn-form-single-row" type="submit">Submit</button>
+    </form>
+    <div class="email-list"></div>
   </div>
 
+  <div class="list-table">
+    <div class="row top-row">
+      <div class="cell cell-header item">Item</div>
+      <div class="cell cell-header price">Price</div>
+      <div class="cell cell-header location">Shop</div>
+      <div class="cell cell-header">Link/URL</div>
+      <div class="cell cell-header additional-info">Additional info</div>
+      <div class="cell cell-header additional-info">Edit/delete</div>
+    </div>
+
+  </div>
 </div>
 
 <button type="button" class="btn btn--primary center" id="new-item">Add new item</button>

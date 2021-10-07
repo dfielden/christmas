@@ -104,3 +104,36 @@
 
 
 }
+
+.single-row-form {
+  align-self: center;
+  width: 100%;
+  display: flex;
+  border: 1px solid $color-black;
+  margin-bottom: 1rem;
+  padding: 0;
+
+  &:focus {
+
+  }
+
+  .input {
+    font-size: 1.6rem;
+    font-family: $font-primary;
+    color: inherit;
+    padding: 1.5rem 1rem;
+    background-color: $color-off-white;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    width: 100%;
+    flex-grow: 2;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 1rem 2rem rgba($color-black, .1);
+      border-bottom: 3px solid $color-black;
+    }
+  }
+
+}

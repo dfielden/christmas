@@ -86,6 +86,12 @@ a:hover {
   margin: 0 auto;
 }
 
+.btn-form-single-row {
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
 .form {
   width: 80%;
   display: flex;
@@ -185,6 +191,32 @@ a:hover {
   background-color: #fdfdfd;
 }
 
+.single-row-form {
+  align-self: center;
+  width: 100%;
+  display: flex;
+  border: 1px solid #000000;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+.single-row-form .input {
+  font-size: 1.6rem;
+  font-family: "Neuton", serif;
+  color: inherit;
+  padding: 1.5rem 1rem;
+  background-color: #fdfdfd;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  width: 100%;
+  flex-grow: 2;
+}
+.single-row-form .input:focus {
+  outline: none;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid #000000;
+}
+
 .header {
   display: flex;
   width: 100%;
@@ -252,12 +284,23 @@ a:hover {
   transform: translateY(-1px);
 }
 
+.main-container {
+  display: flex;
+  width: 90%;
+}
+
+.share-with {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
 .list-table {
   display: flex;
   flex-direction: column;
   border-collapse: collapse;
   align-items: center;
-  width: 80%;
+  width: 70%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
 }
@@ -286,6 +329,38 @@ a:hover {
 .btn-cell {
   display: flex;
   flex-direction: column;
+}
+
+.email-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-container {
+  display: flex;
+  height: 4.5rem;
+  border: 1px solid black;
+  justify-content: space-between;
+  align-items: center;
+}
+.email-container--left {
+  display: flex;
+  align-items: center;
+}
+.email-container--right {
+  display: flex;
+}
+.email-container .fas {
+  font-size: 1.6rem;
+  padding: 1.6rem;
+}
+
+.email-address {
+  font-size: 1.6rem;
+}
+
+.fa-trash {
+  cursor: pointer;
 }
 
 .heading-1 {

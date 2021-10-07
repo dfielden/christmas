@@ -3,12 +3,16 @@ package com.fielden.christmas_list;
 import com.fielden.christmas_list.auth.Login;
 import com.fielden.christmas_list.auth.PasswordSecurity;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.JavaMailSender;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.Cookie;
@@ -25,6 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Controller
 public class ChristmasListApplication {
     private final ListDB db;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     private static final Gson gson = new Gson();
     private static final Random rand = new Random();
@@ -53,7 +60,7 @@ public class ChristmasListApplication {
     }
 
     @ResponseBody
-    @GetMapping("/mylists")
+    @GetMapping("/api/mylists")
     public HashMap<Integer, ListHeader> getMyLists(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
@@ -142,6 +149,42 @@ public class ChristmasListApplication {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         db.updateItem(itemId, item);
         return gson.toJson(item);
+    }
+
+    @ResponseBody
+    @PostMapping(value="/email/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addEmailAddress(@PathVariable(value="id") int listId, @RequestBody String emails, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        System.out.println(emails);
+        db.updateEmails(listId, emails);
+        return gson.toJson(emails);
+    }
+
+    @ResponseBody
+    @GetMapping("/api/emails/{id}")
+    public String getListEmails(@PathVariable(value="id") int listId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        ListAppState state = getOrCreateSession(req, resp);
+        int userId = state.getUserId();
+        return db.getSharedEmails(listId);
+    }
+
+    @ResponseBody
+    @PostMapping("/message")
+    public String postMessage(@RequestBody Message message, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
+        email.setFrom(message.getEmail());
+        email.setTo("happyfaceenterprises@gmail.com");
+        email.setSubject("NEW NAUTICAL WHEEL QUERY");
+        email.setText(CreateEmail.createEmail(message), true);
+
+        mailSender.send(mimeMessage);
+
+        return gson.toJson("hello");
     }
 
     @GetMapping("/login")

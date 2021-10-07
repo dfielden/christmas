@@ -2,16 +2,21 @@ import {AJAX} from "./ajax.js";
 import {Item} from "./Item.js";
 
 window.addEventListener('load', async (e) => {
-    const currentUrl = window.location.href;
-    const listId = parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
+    const listId = getListId();
     const list = await AJAX(`/api/list/${listId}`);
     for (const id in list) {
         const html = generateRowHtml(list[id], id);
-        appendRow(html);
+        appendItemRow(html);
+    }
+
+    const emails = JSON.parse(await AJAX(`/api/emails/${listId}`));
+    for (let i = 0; i < emails.length; i++) {
+        console.log(emails[i]);
+        appendEmailAddress(generateEmailHtml(emails[i]));
     }
 
     document.querySelector('.heading-1').textContent = await AJAX(`/title/${listId}`);
-    console.log(list);
+
 });
 
 document.querySelector('.list-table').addEventListener('click', (e) => {
@@ -19,7 +24,7 @@ document.querySelector('.list-table').addEventListener('click', (e) => {
         const itemId = e.target.closest('.row').dataset.itemid;
         const rowInfo = getRowInfo(e.target.closest('.row'));
         openForm();
-        populateForm(rowInfo);
+        populateItemForm(rowInfo);
         updateFormToEditItem(itemId);
     }
 })
@@ -35,7 +40,7 @@ const getRowInfo = (row) => {
 }
 
 document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('click', () => {
-    closeForm();
+    closeItemForm();
     })
 );
 
@@ -52,8 +57,8 @@ document.querySelector('#edit-item').addEventListener('click', () => {
 })
 
 
-const closeForm = () => {
-    document.querySelector('.form').reset();
+const closeItemForm = () => {
+    document.querySelector('.form-add-edit').reset();
     document.querySelector('.new-entry').classList.add('display-none');
     document.querySelector('#submit-item').classList.remove('display-none');
     document.querySelector('#edit-item').classList.add('display-none');
@@ -64,9 +69,9 @@ const openForm = () => {
     document.querySelector('.new-entry').classList.remove('display-none');
 }
 
-const populateForm = (formParams) => {
+const populateItemForm = (formParams) => {
     console.log(formParams);
-    const form = document.querySelector('.form');
+    const form = document.querySelector('.form-add-edit');
     form.querySelector('#input-product').value = formParams.product;
     form.querySelector('#input-price').value = parseFloat(formParams.price.substring(1));
     form.querySelector('#input-location').value = formParams.location;
@@ -99,8 +104,8 @@ const submitAddItemForm = async () => {
     const listId = parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
     item.id = await AJAX(`/add/${listId}`, item);
     const html = generateRowHtml(item);
-    appendRow(html);
-    closeForm();
+    appendItemRow(html);
+    closeItemForm();
 };
 
 const editItemForm = async () => {
@@ -123,7 +128,7 @@ const editItemForm = async () => {
     const rowToUpdate = document.querySelector(`[data-itemid="${itemId}"]`);
     console.log(rowToUpdate);
     updateRow(rowToUpdate, updatedItem);
-    closeForm();
+    closeItemForm();
 };
 
 const generateRowHtml = (item, id) => {
@@ -157,6 +162,75 @@ const convertPriceIfZero = (item) => {
     return '';
 }
 
-const appendRow = (html) => {
+const appendItemRow = (html) => {
     document.querySelector('.list-table').insertAdjacentHTML('beforeend', html);
 };
+
+
+document.querySelector('.btn-form-single-row').addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    // validate email
+    const emailAddress = document.querySelector('#input-email').value.trim();
+    if (!emailAddress) {
+        return;
+    }
+
+    // append
+    const html = generateEmailHtml(emailAddress);
+    appendEmailAddress(html);
+
+    // add to db
+    await updateEmailsDB();
+
+    // clear form
+    document.querySelector('#email-form').reset();
+});
+
+const generateEmailHtml = (emailAddress) => {
+    return `
+        <div class="email-container">
+            <div class="email-container--left">
+                <i class="fas fa-user-alt"></i>
+                <div class="email-address">${emailAddress}</div>   
+            </div>
+            <div class="email-container--right">
+                <i class="fas fa-trash"></i>
+            </div>
+        </div>
+    `;
+}
+
+const updateEmailsDB = async () => {
+    const allEmailAddresses = getEmailAddresses();
+    const listId = getListId();
+    const url = `/email/${listId}`;
+    await AJAX(url, JSON.stringify(allEmailAddresses));
+}
+
+const appendEmailAddress = (html) => {
+    document.querySelector('.email-list').insertAdjacentHTML('beforeend', html);
+};
+
+const getEmailAddresses = () => {
+    const emailArray = [];
+    const emails = document.querySelectorAll('.email-address');
+    emails.forEach((el) => {
+        console.log(el.textContent);
+        emailArray.push(el.textContent);
+    })
+    return emailArray;
+}
+
+const getListId = () => {
+    const currentUrl = window.location.href;
+    return parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
+}
+
+document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('fa-trash')) {
+        const container = e.target.closest('.email-container');
+        container.remove();
+        await updateEmailsDB();
+    }
+})

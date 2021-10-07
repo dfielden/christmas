@@ -19,6 +19,7 @@ public final class InitiateDBQueries {
                 "user_id INTEGER, " +
                 "title TEXT, " +
                 "time_created INTEGER, " +
+                "shared_with TEXT, " +
                 "FOREIGN KEY (user_id) REFERENCES User(id)" +
                 ")";
     }

@@ -3,7 +3,7 @@
 import {AJAX, showFormMessage} from "./ajax.js";
 
 window.addEventListener('load', async (e) => {
-    const lists = await AJAX(`/mylists`);
+    const lists = await AJAX(`/api/mylists`);
 
     if (lists === {}) {
         appendMyLists(`<p>Create a list of gift ideas :)</p>`);
@@ -54,7 +54,7 @@ document.querySelector('#create-list').addEventListener('click', async () => {
     }
 
     const listId = await AJAX('list/new', title);
-    window.location.href = `/list/${listId}`;
+    window.location.href = `/mylist/${listId}`;
 });
 
 const closeForm = () => {

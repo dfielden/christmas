@@ -43,11 +43,12 @@ public class ListDB {
     }
 
     public synchronized int createList(int userId, String listTitle) throws Exception {
-        String query = "INSERT INTO List (user_id, title, time_created) VALUES (?, ?, ?)";
+        String query = "INSERT INTO List (user_id, title, time_created, shared_with) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, userId);
             stmt.setString(2, listTitle);
             stmt.setLong(3, System.currentTimeMillis());
+            stmt.setString(4, "");
 
             stmt.executeUpdate();
 
@@ -94,7 +95,6 @@ public class ListDB {
 
             if (rs.next()) {
                 return rs.getString("title");
-
             }
         }
         throw new IllegalStateException("No title found for id " + listId);
@@ -178,6 +178,34 @@ public class ListDB {
 
             stmt.executeUpdate();
         }
+    }
+
+    public synchronized void updateEmails(int listId, String emails) throws Exception {
+        String query = "UPDATE List SET " +
+                "shared_with = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, emails);
+            stmt.setInt(2, listId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized String getSharedEmails(int listId) throws Exception {
+        HashMap<Integer, ListHeader> lists = new HashMap<>();
+
+        String query = "SELECT * FROM List WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("shared_with");
+            }
+        }
+        throw new IllegalStateException("No email address found for list id: " + listId);
     }
 
     private synchronized boolean checkUserOwnsList(int listId, int userId) throws Exception {
