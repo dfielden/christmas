@@ -17,6 +17,7 @@
 .form-heading {
   display: flex;
   justify-content: space-between;
+  align-content: flex-start;
 }
 
 .no-squeaking {
@@ -128,6 +129,7 @@
     transition: all .2s;
     width: 100%;
     flex-grow: 2;
+    height: 5rem;
 
     &:focus {
       outline: none;

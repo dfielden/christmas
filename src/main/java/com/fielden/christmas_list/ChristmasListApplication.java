@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -100,7 +102,6 @@ public class ChristmasListApplication {
     @ResponseBody
     @PostMapping("/add/{id}")
     public int addToList(@PathVariable(value="id") int listId, HttpServletRequest req, HttpServletResponse resp, @RequestBody ItemInList item) throws Exception {
-        System.out.println(item);
         return db.addItem(listId, item);
     }
 
@@ -157,7 +158,6 @@ public class ChristmasListApplication {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public String addEmailAddress(@PathVariable(value="id") int listId, @RequestBody String emails, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        System.out.println(emails);
         db.updateEmails(listId, emails);
         return gson.toJson(emails);
     }
@@ -172,19 +172,45 @@ public class ChristmasListApplication {
     }
 
     @ResponseBody
-    @PostMapping("/message")
-    public String postMessage(@RequestBody Message message, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    @PostMapping("/sharelist/{id}")
+    public void postMessage(@PathVariable(value="id") int listId, @RequestBody ArrayList<String> emails, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        ListAppState state = getOrCreateSession(req, resp);
+        int userId = state.getUserId();
+        String usernameFrom = db.getUsername(userId);
+        String listTitle = db.getTitle(listId, userId);
+        for (int i = 0; i < emails.size(); i++) {
+            System.out.println(emails.get(i));
+            try {
+                sendEmil(emails.get(i), usernameFrom, listTitle);
+            } catch (MailException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        System.out.println("list: " + listTitle + ", sent by: " + usernameFrom + ", sent to: " + emails);
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteitem/{id}")
+    public int deleteItem(@PathVariable(value="id") int itemId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        db.deleteItem(itemId);
+        return itemId;
+    }
+
+    public void sendEmil(String sendTo, String usernameFrom, String listTitle) throws Exception {
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
-        email.setFrom(message.getEmail());
-        email.setTo("happyfaceenterprises@gmail.com");
-        email.setSubject("NEW NAUTICAL WHEEL QUERY");
-        email.setText(CreateEmail.createEmail(message), true);
+        email.setFrom("giftandpresentideas@gmail.com");
+        email.setTo(sendTo);
+        email.setSubject(usernameFrom + " has invited you to look at their list!");
+        email.setText(CreateEmail.createEmail(usernameFrom, listTitle ), true);
 
         mailSender.send(mimeMessage);
 
-        return gson.toJson("hello");
     }
 
     @GetMapping("/login")

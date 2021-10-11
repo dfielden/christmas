@@ -17,17 +17,28 @@ window.addEventListener('load', async (e) => {
     document.querySelectorAll('.list-own').forEach(el => el.addEventListener('click', (e) => {
         const id = e.target.closest('.list-own').dataset.listid;
         window.location.href = `mylist/${id}`;
-    }))
+    }));
+
+    document.querySelectorAll('.fa-trash').forEach(el => el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = e.target.closest('.list-own').dataset.listid;
+        openDeleteModal(id);
+    }));
 
 });
 
 const generateListInfoHtml = (id, info) => {
     return `
         <div class="list-container list-own" data-listid="${id}">
-            <div class="list-container--header">
-                <h4 class="heading-4">${info.title}</h4>
+            <div class="list-own-left">
+                <div class="list-container--header">
+                    <h4 class="heading-4">${info.title}</h4>
+                </div>
+                <div class="list-created-on">Created: ${createDateText(new Date(info.timeCreated))}</div>
             </div>
-            <div class="list-created-on">Created: ${createDateText(new Date(info.timeCreated))}</div>
+            <div class="list-own-right">
+                <i class="fas fa-trash"></i>
+            </div>
         </div>
     `;
 }
@@ -46,6 +57,15 @@ document.querySelector('.link--right').addEventListener('click', () => {
     document.querySelector('.new-list').classList.remove('display-none');
 });
 
+document.querySelector('#btn-cancelDelete').addEventListener('click', () => {
+    closeForm();
+});
+
+document.querySelector('#btn-deleteList').addEventListener('click', async (e) => {
+    console.log('close')
+    closeForm();
+});
+
 document.querySelector('#create-list').addEventListener('click', async () => {
     const title = document.querySelector('#input-title').value;
     if (!title) {
@@ -60,6 +80,12 @@ document.querySelector('#create-list').addEventListener('click', async () => {
 const closeForm = () => {
     document.querySelector('.form').reset();
     document.querySelector('.new-list').classList.add('display-none');
+    document.querySelector('.confirm-delete').classList.add('display-none');
+}
+
+const openDeleteModal = (listId) => {
+    document.querySelector('.confirm-delete').classList.remove('display-none');
+    console.log(listId);
 }
 
 const createDateText = (date) => {

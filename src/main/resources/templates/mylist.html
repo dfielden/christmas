@@ -22,27 +22,24 @@
   </ul>
 </div>
 
-<h1 class="heading-1"></h1>
-<div class="main-container">
-  <div class="share-with">
-    <form class="single-row-form" id="email-form">
-      <input class="input" id="input-email" type="email" placeholder="Enter email address here">
-      <button class="btn btn-form-single-row" type="submit">Submit</button>
-    </form>
-    <div class="email-list"></div>
+
+<div class="title-row">
+  <h1 class="heading-1"></h1>
+  <button type="button" class="btn btn--secondary" id="share-list">Share list</button>
+</div>
+
+
+
+<div class="list-table">
+  <div class="row top-row">
+    <div class="cell cell-header item">Item</div>
+    <div class="cell cell-header price">Price</div>
+    <div class="cell cell-header location">Shop</div>
+    <div class="cell cell-header">Link/URL</div>
+    <div class="cell cell-header additional-info">Additional info</div>
+    <div class="cell cell-header additional-info">Edit/delete</div>
   </div>
 
-  <div class="list-table">
-    <div class="row top-row">
-      <div class="cell cell-header item">Item</div>
-      <div class="cell cell-header price">Price</div>
-      <div class="cell cell-header location">Shop</div>
-      <div class="cell cell-header">Link/URL</div>
-      <div class="cell cell-header additional-info">Additional info</div>
-      <div class="cell cell-header additional-info">Edit/delete</div>
-    </div>
-
-  </div>
 </div>
 
 <button type="button" class="btn btn--primary center" id="new-item">Add new item</button>
@@ -86,6 +83,24 @@
   </form>
 
 </div>
+
+<div class="share-with display-none">
+  <div class="overlay form__close"></div>
+  <form class="form" id="email-form">
+    <div class="form-heading">
+      <h2 class="heading-2 header-add-email">Share list</h2>
+      <div class="form__close cross">&times;</div>
+    </div>
+    <div class="single-row-form">
+      <input class="input" id="input-email" type="email" placeholder="Enter email address here">
+      <button class="btn btn-form-single-row" type="submit">Submit</button>
+    </div>
+    <div class="email-list"></div>
+    <button type="button" class="btn btn--primary" id="btn-shareList">Share list</button>
+
+  </form>
+</div>
+
 <script type="module" src="/javascript/mylist.js"></script>
 </body>
 </html>

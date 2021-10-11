@@ -20,7 +20,7 @@ body {
   /*changes box model so that borders and paddings are not added to total width/height specified for a box*/
   height: 100%;
   width: 100%;
-  background: linear-gradient(145deg, rgba(245, 202, 77, 0.8) 0%, rgba(252, 233, 185, 0.8) 100%);
+  background: linear-gradient(145deg, rgba(127, 77, 245, 0.8) 0%, rgba(189, 185, 252, 0.8) 100%);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -66,6 +66,10 @@ a:hover {
   background-color: #502102;
   color: #fdfdfd;
 }
+.btn--secondary {
+  background-color: #7f4df5;
+  color: #fdfdfd;
+}
 .btn--danger {
   background-color: #e91235;
   color: #fdfdfd;
@@ -87,9 +91,10 @@ a:hover {
 }
 
 .btn-form-single-row {
-  height: 100%;
+  height: 5rem;
   margin: 0;
   border-radius: 0;
+  background-color: #ac3d00;
 }
 
 .form {
@@ -111,6 +116,7 @@ a:hover {
 .form-heading {
   display: flex;
   justify-content: space-between;
+  align-content: flex-start;
 }
 
 .no-squeaking {
@@ -210,6 +216,7 @@ a:hover {
   transition: all 0.2s;
   width: 100%;
   flex-grow: 2;
+  height: 5rem;
 }
 .single-row-form .input:focus {
   outline: none;
@@ -277,22 +284,55 @@ a:hover {
   margin: 1rem;
   padding: 1rem;
   display: flex;
-  flex-direction: column;
   cursor: pointer;
 }
 .list-container:hover {
   transform: translateY(-1px);
 }
 
-.main-container {
+.list-own {
   display: flex;
-  width: 90%;
 }
 
-.share-with {
+.list-own-left {
   display: flex;
   flex-direction: column;
-  width: 30%;
+  flex-grow: 2;
+}
+
+.list-own-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.confirm-delete-modal {
+  background-color: #fdfdfd;
+  z-index: 10;
+  padding: 3rem;
+  width: 60rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
 }
 
 .list-table {
@@ -300,7 +340,7 @@ a:hover {
   flex-direction: column;
   border-collapse: collapse;
   align-items: center;
-  width: 70%;
+  width: 90%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
 }
@@ -334,6 +374,7 @@ a:hover {
 .email-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 2.5rem;
 }
 
 .email-container {

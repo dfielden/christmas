@@ -159,6 +159,21 @@ public class ListDB {
         return lists;
     }
 
+    public synchronized String getUsername(int userId) throws Exception {
+
+        String query = "SELECT * FROM User WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+        }
+        throw new IllegalStateException("No user name found");
+    }
+
     public synchronized void updateItem(int itemId, ItemInList item) throws Exception {
         String query = "UPDATE Item SET " +
                 "product = ?, " +
@@ -176,6 +191,15 @@ public class ListDB {
             stmt.setString(5, item.getAdditionalInfo());
             stmt.setInt(6, itemId);
 
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized void deleteItem(int itemId) throws Exception {
+        String query = "DELETE from Item WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, itemId);
             stmt.executeUpdate();
         }
     }

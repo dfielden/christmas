@@ -5,6 +5,7 @@
     <title>Christmas list</title>  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
     <link rel="stylesheet" href="styling/main.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://kit.fontawesome.com/558b08b205.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="header">
@@ -34,21 +35,21 @@
         <div class="lists all-shared-lists">
             <h2 class="heading-2">Lists shared with me</h2>
 
-            <div class="list-container">
+            <div class="list-container flex-col">
                 <div class="list-container--header">
                     <h4 class="heading-4">Daniel's Christmas list</h4>
                 </div>
                 <div class="list-created-on">Created on: December 12 2021</div>
             </div>
 
-            <div class="list-container">
+            <div class="list-container flex-col">
                 <div class="list-container--header">
                     <h4 class="heading-4">Jan's Christmas list</h4>
                 </div>
                 <div class="list-created-on">Created on: December 12 2021</div>
             </div>
 
-            <div class="list-container">
+            <div class="list-container flex-col">
                 <div class="list-container--header">
                     <h4 class="heading-4">Julia's Christmas list</h4>
                 </div>
@@ -74,6 +75,23 @@
             <button type="button" class="btn btn--primary" id="create-list">Create list!</button>
 
         </form>
+    </div>
+
+    <div class="confirm-delete display-none">
+        <div class="overlay form__close"></div>
+        <div class="confirm-delete-modal">
+            <div class="form-heading">
+                <h2 class="heading-2">Delete list</h2>
+                <div class="form__close cross">&times;</div>
+            </div>
+            <p>Are you sure you wish to delete this list? Once deleted, this list will no longer be visible to you or to
+                anybody you have shared this list with.</p>
+            <div class="btn-container">
+                <button type="button" class="btn btn--grey-light" id="btn-cancelDelete">Cancel</button>
+                <button type="button" class="btn btn--danger" id="btn-deleteList">Delete list</button>
+            </div>
+        </div>
+
     </div>
     <script type="module" src="/javascript/index.js"></script>
 </body>

@@ -1,17 +1,13 @@
 package com.fielden.christmas_list;
 
 public class CreateEmail {
-    static String createEmail(Message message) {
-        return "<h1>New message</h1>" +
+    static String createEmail(String usernameFrom, String listTitle) {
+        return "<h1>Gift and present ideas</h1>" +
                 "<br>" +
                 "<br>" +
-                "<b>From:</b>" + " " + message.getName() +
+                 usernameFrom + " has invited you view their list of gift ideas: <b>" + listTitle + "</b>" +
                 "<br>" +
-                "<b>Email:</b>" + " " + message.getEmail() +
                 "<br>" +
-                "<b>Subject:</b>" + " " + message.getSubject() +
-                "<br>" +
-                "<b>Message:</b>" + " " + message.getMessage();
-
+                "Go to <a href=\"http:localhost:8080\">www.giftandpresentideas.com</a> to view the list";
     }
 }

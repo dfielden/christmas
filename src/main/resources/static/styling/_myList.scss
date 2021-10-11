@@ -1,12 +1,8 @@
-.main-container {
-  display: flex;
-  width: 90%;
-}
 
-.share-with {
+
+.title-row {
   display: flex;
-  flex-direction: column;
-  width: 30%;
+  justify-content: space-between;
 }
 
 .list-table {
@@ -14,7 +10,7 @@
   flex-direction: column;
   border-collapse: collapse;
   align-items: center;
-  width: 70%;
+  width: 90%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
 }
@@ -48,6 +44,7 @@
 .email-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 2.5rem;
 }
 
 .email-container {

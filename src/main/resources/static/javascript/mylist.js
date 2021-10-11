@@ -11,7 +11,6 @@ window.addEventListener('load', async (e) => {
 
     const emails = JSON.parse(await AJAX(`/api/emails/${listId}`));
     for (let i = 0; i < emails.length; i++) {
-        console.log(emails[i]);
         appendEmailAddress(generateEmailHtml(emails[i]));
     }
 
@@ -19,13 +18,18 @@ window.addEventListener('load', async (e) => {
 
 });
 
-document.querySelector('.list-table').addEventListener('click', (e) => {
+document.querySelector('.list-table').addEventListener('click', async (e) => {
     if (e.target.classList.contains('btn--grey-light')) {
         const itemId = e.target.closest('.row').dataset.itemid;
         const rowInfo = getRowInfo(e.target.closest('.row'));
-        openForm();
+        openItemForm();
         populateItemForm(rowInfo);
         updateFormToEditItem(itemId);
+    } else if (e.target.classList.contains('btn--danger')) {
+        const itemId = e.target.closest('.row').dataset.itemid;
+        await AJAX(`/deleteitem/${itemId}`);
+        const row = e.target.closest('.row');
+        removeRowFromDom(row);
     }
 })
 
@@ -39,13 +43,18 @@ const getRowInfo = (row) => {
     }
 }
 
+const removeRowFromDom = (row) => {
+    row.remove();
+}
+
 document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('click', () => {
     closeItemForm();
+    closeEmailForm()
     })
 );
 
 document.querySelector('#new-item').addEventListener('click', () => {
-    openForm();
+    openItemForm();
 });
 
 document.querySelector('#submit-item').addEventListener('click', () => {
@@ -54,6 +63,10 @@ document.querySelector('#submit-item').addEventListener('click', () => {
 
 document.querySelector('#edit-item').addEventListener('click', () => {
     editItemForm();
+});
+
+document.querySelector('#share-list').addEventListener('click', () => {
+    openEmailForm();
 })
 
 
@@ -65,12 +78,20 @@ const closeItemForm = () => {
     document.querySelector('.header-add-edit').textContent = 'Add new entry';
 }
 
-const openForm = () => {
+const openItemForm = () => {
     document.querySelector('.new-entry').classList.remove('display-none');
 }
 
+const closeEmailForm = () => {
+    document.querySelector('#email-form').reset();
+    document.querySelector('.share-with').classList.add('display-none');
+}
+
+const openEmailForm = () => {
+    document.querySelector('.share-with').classList.remove('display-none');
+}
+
 const populateItemForm = (formParams) => {
-    console.log(formParams);
     const form = document.querySelector('.form-add-edit');
     form.querySelector('#input-product').value = formParams.product;
     form.querySelector('#input-price').value = parseFloat(formParams.price.substring(1));
@@ -102,8 +123,8 @@ const submitAddItemForm = async () => {
 
     const currentUrl = window.location.href;
     const listId = parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
-    item.id = await AJAX(`/add/${listId}`, item);
-    const html = generateRowHtml(item);
+    const itemId = await AJAX(`/add/${listId}`, item);
+    const html = generateRowHtml(item, itemId);
     appendItemRow(html);
     closeItemForm();
 };
@@ -123,10 +144,8 @@ const editItemForm = async () => {
 
     const itemId = document.querySelector('#id').value;
     const updatedItem = await AJAX(`/edit/${itemId}`, item);
-    console.log(updatedItem);
 
     const rowToUpdate = document.querySelector(`[data-itemid="${itemId}"]`);
-    console.log(rowToUpdate);
     updateRow(rowToUpdate, updatedItem);
     closeItemForm();
 };
@@ -216,7 +235,6 @@ const getEmailAddresses = () => {
     const emailArray = [];
     const emails = document.querySelectorAll('.email-address');
     emails.forEach((el) => {
-        console.log(el.textContent);
         emailArray.push(el.textContent);
     })
     return emailArray;
@@ -233,4 +251,15 @@ document.addEventListener('click', async (e) => {
         container.remove();
         await updateEmailsDB();
     }
-})
+});
+
+document.querySelector('#btn-shareList').addEventListener('click', async () => {
+    sendEmails();
+});
+
+const sendEmails = async () => {
+    const allEmailAddresses = getEmailAddresses();
+    const listId = getListId();
+    const url = `/sharelist/${listId}`;
+    await AJAX(url, allEmailAddresses);
+}
