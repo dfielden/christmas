@@ -21,6 +21,11 @@
   width: 100%
 }
 
+.row-selected {
+  background-color: $color-grey;
+  color: $color-grey-dark
+}
+
 .top-row {
   background-color: $color-primary-dark;
   color: $color-off-white;
@@ -39,6 +44,7 @@
 .btn-cell {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
 }
 
 .email-list {
@@ -48,6 +54,7 @@
 }
 
 .email-container {
+  font-size: 1.6rem;
   display: flex;
   height: 4.5rem;
   border: 1px solid black;
@@ -61,6 +68,7 @@
 
   &--right {
     display: flex;
+    align-items: center;
   }
 
   .fas {
@@ -70,10 +78,29 @@
 }
 
 .email-address {
-  font-size: 1.6rem;
 
 }
 
 .fa-trash {
   cursor: pointer;
+}
+
+.fa-envelope {
+  padding: 1.6rem;
+}
+
+.confirm-send-email {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e8e8e8;
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgb(0 0 0 / 30%);
+  z-index: 20;
+  max-width: 110rem;
 }

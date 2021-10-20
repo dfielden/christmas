@@ -3,18 +3,19 @@ import {Item} from "./Item.js";
 
 window.addEventListener('load', async (e) => {
     const listId = getListId();
-    const list = await AJAX(`/api/list/${listId}`);
+    const list = await AJAX(`/api/mylist/${listId}`);
+    const listSharedStatus = await AJAX(`/api/listsharedstatus/${listId}`);
     for (const id in list) {
-        const html = generateRowHtml(list[id], id);
+        const html = generateRowHtml(list[id], id, listSharedStatus);
         appendItemRow(html);
     }
 
-    const emails = JSON.parse(await AJAX(`/api/emails/${listId}`));
-    for (let i = 0; i < emails.length; i++) {
-        appendEmailAddress(generateEmailHtml(emails[i]));
+    const emails = await AJAX(`/api/emails/${listId}`);
+    for (const emailAddress in emails) {
+        appendEmailAddress(generateEmailHtml(emailAddress, emails[emailAddress]));
     }
 
-    document.querySelector('.heading-1').textContent = await AJAX(`/title/${listId}`);
+    document.querySelector('.heading-1').textContent = await AJAX(`/api/title/${listId}`);
 
 });
 
@@ -50,8 +51,21 @@ const removeRowFromDom = (row) => {
 document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('click', () => {
     closeItemForm();
     closeEmailForm()
+    closeSendEmailCheck();
     })
 );
+
+document.querySelector('.confirm-send-email__close').addEventListener('click', () => {
+    closeSendEmailCheck();
+});
+
+document.querySelector('#btn-cancelSendEmail').addEventListener('click', () => {
+    closeSendEmailCheck();
+});
+
+document.querySelector('#btn-confirmSendEmail').addEventListener('click', () => {
+    sendEmails();
+})
 
 document.querySelector('#new-item').addEventListener('click', () => {
     openItemForm();
@@ -87,6 +101,11 @@ const closeEmailForm = () => {
     document.querySelector('.share-with').classList.add('display-none');
 }
 
+const closeSendEmailCheck = () => {
+    document.querySelector('#email-form').style.zIndex = "10";
+    document.querySelector('.confirm-send-email').classList.add('display-none');
+}
+
 const openEmailForm = () => {
     document.querySelector('.share-with').classList.remove('display-none');
 }
@@ -105,7 +124,6 @@ const updateFormToEditItem = (itemId) => {
     document.querySelector('#edit-item').classList.remove('display-none');
     document.querySelector('.header-add-edit').textContent = 'Edit item';
     document.querySelector('#id').value  = itemId;
-
 }
 
 const submitAddItemForm = async () => {
@@ -124,7 +142,8 @@ const submitAddItemForm = async () => {
     const currentUrl = window.location.href;
     const listId = parseInt(currentUrl.substring(currentUrl.lastIndexOf('/') + 1));
     const itemId = await AJAX(`/add/${listId}`, item);
-    const html = generateRowHtml(item, itemId);
+    const listSharedStatus = await AJAX(`/api/listsharedstatus/${listId}`);
+    const html = generateRowHtml(item, itemId, listSharedStatus);
     appendItemRow(html);
     closeItemForm();
 };
@@ -150,18 +169,15 @@ const editItemForm = async () => {
     closeItemForm();
 };
 
-const generateRowHtml = (item, id) => {
+const generateRowHtml = (item, id, boolListShared) => {
     return `
-      <div class="row" data-itemid="${id}">
+      <div class="row row-item" data-itemid="${id}">
         <div class="cell product">${item.product}</div>
         <div class="cell price">${convertPriceIfZero(item)}</div>
         <div class="cell location">${item.location}</div>
-        <div class="cell link">${item.url}</div>
+        <div class="cell url link">${item.url}</div>
         <div class="cell additional-info">${item.additionalInfo}</div>
-        <div class="cell btn-cell">
-            <div class="btn btn--table btn--grey-light">Edit</div>
-            <div class="btn btn--table btn--danger">Delete</div>
-        </div>
+        ${boolListShared ? '<div class="cell btn-cell"></div>' : '<div class="cell btn-cell"><div class="btn btn--table btn--grey-light">Edit</div><div class="btn btn--table btn--danger">Delete</div></div>'}
       </div>
     `;
 };
@@ -196,36 +212,33 @@ document.querySelector('.btn-form-single-row').addEventListener('click', async (
     }
 
     // append
-    const html = generateEmailHtml(emailAddress);
+    const html = generateEmailHtml(emailAddress, false );
     appendEmailAddress(html);
 
     // add to db
-    await updateEmailsDB();
+    const listId = getListId();
+    const url = `/email/${listId}`;
+    await AJAX(url, emailAddress);
 
     // clear form
     document.querySelector('#email-form').reset();
 });
 
-const generateEmailHtml = (emailAddress) => {
+const generateEmailHtml = (emailAddress, boolEmailSent, responseToSubmit = false) => {
+    console.log('bool sent, ' + boolEmailSent)
     return `
         <div class="email-container">
             <div class="email-container--left">
                 <i class="fas fa-user-alt"></i>
                 <div class="email-address">${emailAddress}</div>   
             </div>
-            <div class="email-container--right">
-                <i class="fas fa-trash"></i>
+            <div class="email-container--right ${boolEmailSent ? 'success' : responseToSubmit ? 'danger' : ''}">
+                ${boolEmailSent ? "Email sent<i class=\"far fa-envelope\"></i>" : "Email not sent <i class=\"fas fa-trash\"></i>"}
             </div>
         </div>
     `;
 }
 
-const updateEmailsDB = async () => {
-    const allEmailAddresses = getEmailAddresses();
-    const listId = getListId();
-    const url = `/email/${listId}`;
-    await AJAX(url, JSON.stringify(allEmailAddresses));
-}
 
 const appendEmailAddress = (html) => {
     document.querySelector('.email-list').insertAdjacentHTML('beforeend', html);
@@ -248,18 +261,47 @@ const getListId = () => {
 document.addEventListener('click', async (e) => {
     if (e.target.classList.contains('fa-trash')) {
         const container = e.target.closest('.email-container');
+        const emailAddress = container.querySelector('.email-address').textContent;
         container.remove();
-        await updateEmailsDB();
+
+        const listId = getListId();
+        const url = `/deleteemail/${listId}`;
+        await AJAX(url, emailAddress);
     }
 });
 
 document.querySelector('#btn-shareList').addEventListener('click', async () => {
-    sendEmails();
+    document.querySelector('.confirm-send-email').classList.remove('display-none');
+    document.querySelector('#email-form').style.zIndex = "4";
 });
 
+
+
 const sendEmails = async () => {
+    closeSendEmailCheck();
     const allEmailAddresses = getEmailAddresses();
     const listId = getListId();
     const url = `/sharelist/${listId}`;
     await AJAX(url, allEmailAddresses);
+    await repopulateEmailsAfterSend();
 }
+
+const repopulateEmailsAfterSend = async () => {
+    document.querySelector('.email-list').innerHTML = "";
+    const listId = getListId();
+    const emails = await AJAX(`/api/emails/${listId}`);
+    for (const emailAddress in emails) {
+        appendEmailAddress(generateEmailHtml(emailAddress, emails[emailAddress], true));
+    }
+}
+
+
+// const setAllItemsAsShared = () => {
+//     const rows = document.querySelectorAll('.row-item');
+//     rows.forEach(el => setItemAsShared(el.dataset.itemid));
+// }
+//
+// const setItemAsShared = async (itemId) => {
+//     const url = `/shareitem/${itemId}`;
+//     await AJAX(url, true);
+// }

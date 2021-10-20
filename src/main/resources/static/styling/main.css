@@ -26,6 +26,7 @@ body {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   padding: 2rem;
+  font-size: 1.6rem;
 }
 
 img {
@@ -129,7 +130,7 @@ a:hover {
 }
 
 .display-none {
-  display: none;
+  display: none !important;
 }
 
 .overlay {
@@ -351,6 +352,11 @@ a:hover {
   width: 100%;
 }
 
+.row-selected {
+  background-color: #a4a4a4;
+  color: #7c7c7c;
+}
+
 .top-row {
   background-color: #502102;
   color: #fdfdfd;
@@ -369,6 +375,7 @@ a:hover {
 .btn-cell {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
 }
 
 .email-list {
@@ -378,6 +385,7 @@ a:hover {
 }
 
 .email-container {
+  font-size: 1.6rem;
   display: flex;
   height: 4.5rem;
   border: 1px solid black;
@@ -390,18 +398,35 @@ a:hover {
 }
 .email-container--right {
   display: flex;
+  align-items: center;
 }
 .email-container .fas {
   font-size: 1.6rem;
   padding: 1.6rem;
 }
 
-.email-address {
-  font-size: 1.6rem;
-}
-
 .fa-trash {
   cursor: pointer;
+}
+
+.fa-envelope {
+  padding: 1.6rem;
+}
+
+.confirm-send-email {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e8e8e8;
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  max-width: 110rem;
 }
 
 .heading-1 {
@@ -453,6 +478,14 @@ a:hover {
 .form-msg--error {
   color: #e91235;
   visibility: visible;
+}
+
+.success {
+  color: #007d26;
+}
+
+.danger {
+  color: #e91235;
 }
 
 /*# sourceMappingURL=main.css.map */

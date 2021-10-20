@@ -35,7 +35,7 @@ export const AJAX = async function(url, uploadData = undefined) {
             // GET by default
             : fetch(url);
 
-        const res = await Promise.race([fetchPromise, timeout(2000)]); // two promises will race - timeout returns reject after time argument - i.e. we can add a timeout for load failure
+        const res = await Promise.race([fetchPromise, timeout(10000)]); // two promises will race - timeout returns reject after time argument - i.e. we can add a timeout for load failure
         const data = await res.json();
 
         if(!res.ok) throw new Error(`${data.message} (${res.status})`);
@@ -45,3 +45,4 @@ export const AJAX = async function(url, uploadData = undefined) {
         throw err;
     }
 };
+

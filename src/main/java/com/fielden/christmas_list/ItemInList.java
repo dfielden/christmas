@@ -125,3 +125,31 @@ class ListHeader {
     }
 }
 
+class ListHeaderShared extends ListHeader {
+    private String title;
+    private long timeCreated;
+    private int creatorId;
+
+    public ListHeaderShared(String title, long timeCreated, int creatorId) {
+        super(title, timeCreated);
+        this.creatorId = creatorId;
+    }
+
+    public int getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    @Override
+    public String toString() {
+        return "ListHeaderShared{" +
+                "title='" + title + '\'' +
+                ", timeCreated=" + timeCreated +
+                ", creator='" + creatorId + '\'' +
+                '}';
+    }
+}
+

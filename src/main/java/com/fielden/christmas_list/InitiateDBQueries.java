@@ -19,8 +19,18 @@ public final class InitiateDBQueries {
                 "user_id INTEGER, " +
                 "title TEXT, " +
                 "time_created INTEGER, " +
-                "shared_with TEXT, " +
+                "shared BOOLEAN, " +
                 "FOREIGN KEY (user_id) REFERENCES User(id)" +
+                ")";
+    }
+
+    private static String createSharedWithTable() {
+        return "CREATE TABLE IF NOT EXISTS SharedWith (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                "list_id INTEGER, " +
+                "email_address TEXT, " +
+                "email_sent BOOLEAN, " +
+                "FOREIGN KEY (list_id) REFERENCES User(list)" +
                 ")";
     }
 
@@ -37,7 +47,6 @@ public final class InitiateDBQueries {
                 "selected_by INTEGER, " +
                 "FOREIGN KEY (list_id) REFERENCES List(id)" +
                 "FOREIGN KEY (selected_by) REFERENCES User(id)" +
-
                 ")";
     }
 
@@ -46,7 +55,7 @@ public final class InitiateDBQueries {
         queries.add(createUserTable());
         queries.add(createListTable());
         queries.add(createItemTable());
-
+        queries.add(createSharedWithTable());
         return queries;
     }
 }

@@ -4,7 +4,14 @@ const LOGIN_SUCCESS_VALUE = 'LOGIN_SUCCESS'; // must match PSFS LOGIN_SUCCESS_RE
 
 document.querySelector('#login').addEventListener('click', async (e) => {
     e.preventDefault();
+    await submitForm();
+});
 
+document.querySelector('.form').addEventListener('submit', async () => {
+    await submitForm();
+})
+
+const submitForm = async () => {
     // validation
     const email = document.querySelector('#input-email').value;
     const pw = document.querySelector('#input-password').value;
@@ -22,4 +29,4 @@ document.querySelector('#login').addEventListener('click', async (e) => {
     } else {
         showFormMessage(data, false, document.querySelector('.form'));
     }
-});
+}

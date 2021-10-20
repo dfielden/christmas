@@ -43,12 +43,11 @@ public class ListDB {
     }
 
     public synchronized int createList(int userId, String listTitle) throws Exception {
-        String query = "INSERT INTO List (user_id, title, time_created, shared_with) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO List (user_id, title, time_created) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, userId);
             stmt.setString(2, listTitle);
             stmt.setLong(3, System.currentTimeMillis());
-            stmt.setString(4, "");
 
             stmt.executeUpdate();
 
@@ -70,6 +69,7 @@ public class ListDB {
             stmt.setString(5, item.getUrl());
             stmt.setString(6, item.getAdditionalInfo());
             stmt.setBoolean(7, false);
+
             stmt.setInt(8, -1);
 
             stmt.executeUpdate();
@@ -82,9 +82,37 @@ public class ListDB {
         }
     }
 
+    public synchronized void setListAsShared(int listId) throws Exception {
+        String query = "UPDATE List SET " +
+                "shared = true " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized boolean checkListIsShared(int listId) throws Exception {
+        String query = "SELECT * FROM List WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                if (rs.getBoolean("shared")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public synchronized String getTitle(int listId, int userId) throws Exception {
-        if (!checkUserOwnsList(listId, userId)) {
-            throw new IllegalStateException("User does not have permission to access list");
+        if (!(checkUserOwnsList(listId, userId) || checkUserCanViewList(listId, userId))) {
+            throw new IllegalStateException("User does not have permission to view list");
         }
 
         String query = "SELECT * FROM List WHERE id = ?";
@@ -111,11 +139,6 @@ public class ListDB {
 
     public synchronized HashMap<Integer, ItemInList> getList(int listId, int userId) throws Exception {
         HashMap<Integer, ItemInList> items = new HashMap<>();
-
-        if (!checkUserOwnsList(listId, userId)) {
-            throw new IllegalStateException("User does not have permission to access list");
-        }
-
         String query = "SELECT * FROM Item WHERE list_id = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
@@ -174,6 +197,51 @@ public class ListDB {
         throw new IllegalStateException("No user name found");
     }
 
+    public synchronized String getEmail(int userId) throws Exception {
+
+        String query = "SELECT * FROM User WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("email");
+            }
+        }
+        throw new IllegalStateException("No user name found");
+    }
+
+    public synchronized void updateEmailSent(String email, int listId) throws Exception {
+        String query = "UPDATE SharedWith SET email_sent = ? WHERE email_address = ? AND list_id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setBoolean(1, true);
+            stmt.setString(2, email);
+            stmt.setInt(3, listId);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized boolean checkEmailSent(String email, int listId) throws Exception {
+        String query = "SELECT * FROM SharedWith WHERE email_address = ? AND list_id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setInt(2, listId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                if (rs.getBoolean("email_sent")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public synchronized void updateItem(int itemId, ItemInList item) throws Exception {
         String query = "UPDATE Item SET " +
                 "product = ?, " +
@@ -195,6 +263,34 @@ public class ListDB {
         }
     }
 
+    public synchronized void selectItem(int itemId, int userId) throws Exception {
+        String query = "UPDATE Item SET " +
+                "selected = ?, " +
+                "selected_by = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setBoolean(1, true);
+            stmt.setInt(2, userId);
+            stmt.setInt(3, itemId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized void deselectItem(int itemId) throws Exception {
+        String query = "UPDATE Item SET " +
+                "selected = ?, " +
+                "selected_by = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setBoolean(1, false);
+            stmt.setInt(2, -1);
+            stmt.setInt(3, itemId);
+            stmt.executeUpdate();
+        }
+    }
+
     public synchronized void deleteItem(int itemId) throws Exception {
         String query = "DELETE from Item WHERE id = ?";
 
@@ -204,35 +300,98 @@ public class ListDB {
         }
     }
 
-    public synchronized void updateEmails(int listId, String emails) throws Exception {
-        String query = "UPDATE List SET " +
-                "shared_with = ? " +
-                "WHERE id = ?";
+    public synchronized void deleteList(int itemId) throws Exception {
+        String query = "DELETE from List WHERE id = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setString(1, emails);
-            stmt.setInt(2, listId);
+            stmt.setInt(1, itemId);
             stmt.executeUpdate();
         }
     }
 
-    public synchronized String getSharedEmails(int listId) throws Exception {
-        HashMap<Integer, ListHeader> lists = new HashMap<>();
+    public synchronized int addSharedWith(int listId, String emailAddress) throws Exception {
+        String query = "INSERT INTO SharedWith (list_id, email_address, email_sent) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, listId);
+            stmt.setString(2, emailAddress);
+            stmt.setBoolean(3, false);
 
-        String query = "SELECT * FROM List WHERE id = ?";
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (!rs.next()) {
+                throw new IllegalStateException("Unable to get generated key for added email address");
+            }
+            return rs.getInt(1);
+        }
+    }
+
+    public synchronized HashMap<Integer, ListHeaderShared> getSharedLists(String emailAddress) throws Exception {
+        ArrayList<Integer> listIds = new ArrayList<>();
+        HashMap<Integer, ListHeaderShared> lists = new HashMap<>();
+
+        String query = "SELECT * FROM SharedWith WHERE email_address = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, emailAddress);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                listIds.add(rs.getInt("list_id"));
+            }
+        }
+
+        for (Integer id : listIds) {
+            query = "SELECT * FROM List WHERE id = ?";
+
+            try (PreparedStatement stmt = connect.prepareStatement(query)) {
+                stmt.setInt(1, id);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    int listId = rs.getInt("id");
+                    String title = rs.getString("title");
+                    long timeCreated = rs.getLong("time_created");
+                    int creatorId = rs.getInt("user_id");
+
+                    lists.put(listId, new ListHeaderShared(title, timeCreated, creatorId));
+                }
+            }
+        }
+        return lists;
+    }
+
+    public synchronized HashMap<String, Boolean> getSharedEmails(int listId) throws Exception {
+        HashMap<String, Boolean> emails = new HashMap<>();
+
+        String query = "SELECT * FROM SharedWith WHERE list_id = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
             stmt.setInt(1, listId);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                return rs.getString("shared_with");
+            while (rs.next()) {
+                emails.put(rs.getString("email_Address"), rs.getBoolean("email_sent"));
             }
         }
-        throw new IllegalStateException("No email address found for list id: " + listId);
+        return emails;
     }
 
-    private synchronized boolean checkUserOwnsList(int listId, int userId) throws Exception {
+    public synchronized void deleteSharedEmail(int listId, String emailAddress) throws Exception {
+        String query = "DELETE from SharedWith WHERE list_id = ? AND email_address = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+            stmt.setString(2, emailAddress);
+            stmt.executeUpdate();
+            System.out.println("Delete it, listId = " + listId + ", emailAddress = " + emailAddress);
+
+        }
+    }
+
+
+
+    public synchronized boolean checkUserOwnsList(int listId, int userId) throws Exception {
         String query = "SELECT * FROM List WHERE id = ? AND user_id = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
@@ -243,6 +402,25 @@ public class ListDB {
 
             if (rs.next()) {
                 return true;
+            }
+            return false;
+        }
+    }
+
+    public synchronized boolean checkUserCanViewList(int listId, int userId) throws Exception {
+        String query = "SELECT * FROM SharedWith WHERE list_id = ?";
+        String userEmail = getEmail(userId);
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                System.out.println(rs.getString("email_address") + ", " + userEmail);
+                if (rs.getString("email_address").equals(userEmail)) {
+                    return true;
+                }
             }
             return false;
         }

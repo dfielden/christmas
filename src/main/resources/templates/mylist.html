@@ -93,13 +93,31 @@
     </div>
     <div class="single-row-form">
       <input class="input" id="input-email" type="email" placeholder="Enter email address here">
-      <button class="btn btn-form-single-row" type="submit">Submit</button>
+      <button class="btn btn-form-single-row" type="submit">Add</button>
     </div>
     <div class="email-list"></div>
-    <button type="button" class="btn btn--primary" id="btn-shareList">Share list</button>
-
+    <button type="button" class="btn btn--primary" id="btn-shareList">Send emails</button>
   </form>
 </div>
+
+<div class="confirm-send-email display-none">
+  <div class="confirm-send-modal">
+    <div class="form-heading">
+      <h2 class="heading-2">Send list now?</h2>
+      <div class="confirm-send-email__close cross">&times;</div>
+    </div>
+    <p class="paragraph">Are you sure you wish to share this list now? After sending the list, you will no longer be able to edit or delete existing items but will still be able to add additional items.</p>
+    <br>
+    <p class="paragraph">It is recommended that you do not share this list until it is complete.</p>
+    <div class="btn-container">
+      <button type="button" class="btn btn--grey-light" id="btn-cancelSendEmail">Cancel</button>
+      <button type="button" class="btn btn--danger" id="btn-confirmSendEmail">Send emails</button>
+    </div>
+  </div>
+
+</div>
+
+
 
 <script type="module" src="/javascript/mylist.js"></script>
 </body>
