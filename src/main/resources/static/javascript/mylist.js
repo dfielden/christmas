@@ -172,11 +172,11 @@ const editItemForm = async () => {
 const generateRowHtml = (item, id, boolListShared) => {
     return `
       <div class="row row-item" data-itemid="${id}">
-        <div class="cell product">${item.product}</div>
-        <div class="cell price">${convertPriceIfZero(item)}</div>
-        <div class="cell location">${item.location}</div>
-        <div class="cell url link">${item.url}</div>
-        <div class="cell additional-info">${item.additionalInfo}</div>
+        <div class="cell product pseudo-product">${item.product}</div>
+        <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
+        <div class="cell location pseudo-location">${item.location}</div>
+        <div class="cell url link pseudo-url">${item.url}</div>
+        <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         ${boolListShared ? '<div class="cell btn-cell"></div>' : '<div class="cell btn-cell"><div class="btn btn--table btn--grey-light">Edit</div><div class="btn btn--table btn--danger">Delete</div></div>'}
       </div>
     `;
@@ -233,7 +233,7 @@ const generateEmailHtml = (emailAddress, boolEmailSent, responseToSubmit = false
                 <div class="email-address">${emailAddress}</div>   
             </div>
             <div class="email-container--right ${boolEmailSent ? 'success' : responseToSubmit ? 'danger' : ''}">
-                ${boolEmailSent ? "Email sent<i class=\"far fa-envelope\"></i>" : "Email not sent <i class=\"fas fa-trash\"></i>"}
+                ${boolEmailSent ? "<i class=\"far fa-envelope\"></i>Email sent" : "<i class=\"far fa-envelope\"></i>Email not sent<i class=\"fas fa-trash\"></i>"}
             </div>
         </div>
     `;

@@ -86,6 +86,7 @@ public class ChristmasListApplication {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
         if (!state.isLoggedIn()) {
+            System.out.println("not logged in");
             return "redirect:/login";
         }
         return "mylist";

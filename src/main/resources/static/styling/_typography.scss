@@ -2,18 +2,26 @@
   padding-left: 1rem;
   padding-bottom: 2rem;
   font-size: 3rem;
+
+  @media only screen and (max-width: $break-small) {
+    font-size: 2.5rem;
+  }
 }
 
 .heading-2 {
-  padding-left: 1rem;
+  //padding-left: 1rem;
   padding-bottom: 2rem;
   font-size: 2.5rem;
+
+  @media only screen and (max-width: $break-small) {
+    font-size: 2rem;
+  }
 }
 
 .heading-3 {
   padding-left: 1rem;
   padding-bottom: 2rem;
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .heading-4 {

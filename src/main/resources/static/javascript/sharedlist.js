@@ -17,11 +17,11 @@ window.addEventListener('load', async (e) => {
 const generateRowHtml = async (item, id) => {
     return `
       <div class="row ${item.selected ? 'row-selected' : ''}" data-itemid="${id}">
-        <div class="cell product">${item.product}</div>
-        <div class="cell price">${convertPriceIfZero(item)}</div>
-        <div class="cell location">${item.location}</div>
-        <div class="cell link">${item.url}</div>
-        <div class="cell additional-info">${item.additionalInfo}</div>
+        <div class="cell product pseudo-product">${item.product}</div>
+        <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
+        <div class="cell location pseudo-location">${item.location}</div>
+        <div class="cell link url pseudo-url">${item.url}</div>
+        <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         <div class="cell btn-cell">
             ${await generateIsSelectedHtml(item)}
         </div>

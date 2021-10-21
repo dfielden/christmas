@@ -150,7 +150,7 @@ const createDateText = (date) => {
     if (isToday(date)) {
         return `today`;
     }
-    return `${date.getDay() < 10 ?'0':''}${date.getDay()} ${date.toLocaleString('default', {month: 'short'})} ${date.getFullYear()}`;
+    return `${date.getDate() < 10 ?'0':''}${date.getDate()} ${date.toLocaleString('default', {month: 'short'})} ${date.getFullYear()}`;
 }
 
 const isToday = (date) => {

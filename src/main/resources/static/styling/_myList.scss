@@ -13,12 +13,18 @@
   width: 90%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
+  font-size: 1.2rem;
 }
 
 .row {
   display: flex;
   flex-direction: row;
-  width: 100%
+  width: 100%;
+
+  @media only screen and (max-width: $break-small) {
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
 }
 
 .row-selected {
@@ -31,6 +37,10 @@
   color: $color-off-white;
   text-align: left;
   display: flex;
+
+  @media only screen and (max-width: $break-small) {
+    display: none;
+  }
 }
 
 .cell {
@@ -39,12 +49,22 @@
   flex-basis: calc(100% / 5);
   padding: 1rem;
   align-self: center;
+
+  @media only screen and (max-width: $break-small) {
+    padding: 0.3rem;
+  }
 }
 
 .btn-cell {
   display: flex;
   flex-direction: column;
   text-decoration: none;
+
+  @media only screen and (max-width: $break-small) {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .email-list {
@@ -55,11 +75,19 @@
 
 .email-container {
   font-size: 1.6rem;
+  padding: 1.6rem;
   display: flex;
   height: 4.5rem;
   border: 1px solid black;
   justify-content: space-between;
   align-items: center;
+
+  @media only screen and (max-width: $break-small) {
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    padding: 1rem;
+  }
 
   &--left {
     display: flex;
@@ -69,12 +97,20 @@
   &--right {
     display: flex;
     align-items: center;
+
+    @media only screen and (max-width: $break-small) {
+      width: 100%;
+    }
   }
 
-  .fas {
-    font-size: 1.6rem;
-    padding: 1.6rem;
-  }
+  //.fas {
+  //  font-size: 1.6rem;
+  //  margin-right: 1.6rem;
+  //
+  //  @media only screen and (max-width: $break-small) {
+  //    //padding: 1rem;
+  //  }
+  //}
 }
 
 .email-address {
@@ -82,11 +118,34 @@
 }
 
 .fa-trash {
+  margin-left: 1.6rem;
+
   cursor: pointer;
+  @media only screen and (max-width: $break-small) {
+    margin-left: auto;
+  }
+
+  &:hover {
+    color: $color-danger;
+  }
 }
 
 .fa-envelope {
-  padding: 1.6rem;
+  margin-right: 1.6rem;
+
+  @media only screen and (max-width: $break-small) {
+    //padding: 1rem;
+  }
+
+}
+
+.fa-user-alt {
+  margin-right: 1.6rem;
+
+  @media only screen and (max-width: $break-small) {
+    //padding: 1rem;
+  }
+
 }
 
 .confirm-send-email {
@@ -103,4 +162,77 @@
   box-shadow: 0 3rem 5rem rgb(0 0 0 / 30%);
   z-index: 20;
   max-width: 110rem;
+
+  @media only screen and (max-width: $break-small) {
+    width: 90%;
+    padding: 2rem;
+  }
 }
+
+@mixin pseudoElement-before {
+  display: flex;
+  padding: 0 0.5rem 0 0;
+  font-weight: 700;
+  color: inherit !important;
+  //white-space: pre;
+
+  @media only screen and (max-width: $break-tiny) {
+    padding: 0;
+  }
+}
+
+.pseudo-product {
+  &::before {
+    display: none;
+
+    @media only screen and (max-width: $break-small) {
+      @include pseudoElement-before;
+      content: "Product: " + "\00000a";
+    }
+  }
+}
+
+.pseudo-price {
+  &::before {
+    display: none;
+
+    @media only screen and (max-width: $break-small) {
+      @include pseudoElement-before;
+      content: "Price: " + "\00000a";
+    }
+  }
+}
+
+.pseudo-location {
+  &::before {
+    display: none;
+
+    @media only screen and (max-width: $break-small) {
+      @include pseudoElement-before;
+      content: "Location: " + "\00000a";
+    }
+  }
+}
+
+.pseudo-url {
+  &::before {
+    display: none;
+
+    @media only screen and (max-width: $break-small) {
+      @include pseudoElement-before;
+      content: "URL: " + "\00000a";
+    }
+  }
+}
+
+.pseudo-additional-info {
+  &::before {
+    display: none;
+
+    @media only screen and (max-width: $break-small) {
+      @include pseudoElement-before;
+      content: "Additional info: " + "\00000a";
+    }
+  }
+}
+

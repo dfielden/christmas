@@ -11,7 +11,8 @@
 html {
   font-size: 62.5%;
   /*1rem = 10px*/
-  height: 100%;
+  min-height: 100%;
+  overflow-y: scroll;
   font-family: "Neuton", serif;
 }
 
@@ -20,13 +21,17 @@ body {
   /*changes box model so that borders and paddings are not added to total width/height specified for a box*/
   height: 100%;
   width: 100%;
-  background: linear-gradient(145deg, rgba(127, 77, 245, 0.8) 0%, rgba(189, 185, 252, 0.8) 100%);
+  background: linear-gradient(145deg, rgba(197, 197, 197, 0.8) 0%, rgba(232, 232, 232, 0.8) 100%);
   position: absolute;
+  background-size: cover;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   padding: 2rem;
   font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  color: #000000;
 }
 
 img {
@@ -59,16 +64,27 @@ a:hover {
   align-self: center;
   font-size: 1.6rem;
   margin-bottom: 2rem;
+  padding: 1rem;
+}
+@media only screen and (max-width: 600px) {
+  .btn, .btn:link, .btn:visited {
+    width: 10rem;
+    height: 3rem;
+    font-size: 1.2rem;
+  }
 }
 .btn:active, .btn:link:active, .btn:visited:active {
   filter: brightness(0.9);
 }
+.btn:hover, .btn:link:hover, .btn:visited:hover {
+  filter: brightness(1.1);
+}
 .btn--primary {
-  background-color: #502102;
+  background-color: #3e0f8d;
   color: #fdfdfd;
 }
 .btn--secondary {
-  background-color: #7f4df5;
+  background-color: #ef00cf;
   color: #fdfdfd;
 }
 .btn--danger {
@@ -76,15 +92,16 @@ a:hover {
   color: #fdfdfd;
 }
 .btn--grey-light {
-  background-color: #e8e8e8;
+  background-color: #c5c5c5;
   color: #000000;
 }
 .btn--table {
   width: 80%;
-  max-width: 5rem;
+  max-width: 10rem;
   height: 2rem;
   align-self: center;
   margin: 0.4rem;
+  font-size: 1.2rem;
 }
 
 .center {
@@ -95,7 +112,8 @@ a:hover {
   height: 5rem;
   margin: 0;
   border-radius: 0;
-  background-color: #ac3d00;
+  background-color: #5723b6;
+  color: #fdfdfd;
 }
 
 .form {
@@ -106,12 +124,20 @@ a:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #e8e8e8;
+  overflow-y: scroll;
+  background-color: #c5c5c5;
   padding: 6rem;
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
   z-index: 10;
   max-width: 110rem;
+}
+@media only screen and (max-width: 600px) {
+  .form {
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+  }
 }
 
 .form-heading {
@@ -171,6 +197,11 @@ a:hover {
 .form-label--white {
   color: #fdfdfd;
 }
+@media only screen and (max-width: 600px) {
+  .form-label {
+    width: 100%;
+  }
+}
 
 .form-input {
   font-size: 1.6rem;
@@ -194,7 +225,7 @@ a:hover {
 .form-input:focus {
   outline: none;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-  border-bottom: 3px solid #ac3d00;
+  border-bottom: 3px solid #5723b6;
   background-color: #fdfdfd;
 }
 
@@ -251,11 +282,11 @@ a:hover {
   cursor: pointer;
 }
 .nav-item--selected {
-  background-color: #502102;
+  background-color: #3e0f8d;
   color: #fdfdfd;
 }
 .nav-item:hover, .nav-item:active {
-  background-color: #ac3d00;
+  background-color: #5723b6;
   color: #fdfdfd;
 }
 
@@ -271,6 +302,15 @@ a:hover {
 .lists {
   width: 80%;
   margin-bottom: 2.5rem;
+  border: 1px solid black;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 3rem rgba(0, 0, 0, 0.1);
+}
+@media only screen and (max-width: 600px) {
+  .lists {
+    width: 100%;
+  }
 }
 
 .my-lists-header {
@@ -286,9 +326,16 @@ a:hover {
   padding: 1rem;
   display: flex;
   cursor: pointer;
+  background: linear-gradient(145deg, #ac81fa 0%, #d4c4f5 100%);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
 }
 .list-container:hover {
   transform: translateY(-1px);
+}
+@media only screen and (max-width: 600px) {
+  .list-container {
+    margin: 1rem 0 1rem 0;
+  }
 }
 
 .list-own {
@@ -344,12 +391,19 @@ a:hover {
   width: 90%;
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
+  font-size: 1.2rem;
 }
 
 .row {
   display: flex;
   flex-direction: row;
   width: 100%;
+}
+@media only screen and (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
 }
 
 .row-selected {
@@ -358,10 +412,15 @@ a:hover {
 }
 
 .top-row {
-  background-color: #502102;
+  background-color: #3e0f8d;
   color: #fdfdfd;
   text-align: left;
   display: flex;
+}
+@media only screen and (max-width: 600px) {
+  .top-row {
+    display: none;
+  }
 }
 
 .cell {
@@ -371,11 +430,23 @@ a:hover {
   padding: 1rem;
   align-self: center;
 }
+@media only screen and (max-width: 600px) {
+  .cell {
+    padding: 0.3rem;
+  }
+}
 
 .btn-cell {
   display: flex;
   flex-direction: column;
   text-decoration: none;
+}
+@media only screen and (max-width: 600px) {
+  .btn-cell {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .email-list {
@@ -386,11 +457,20 @@ a:hover {
 
 .email-container {
   font-size: 1.6rem;
+  padding: 1.6rem;
   display: flex;
   height: 4.5rem;
   border: 1px solid black;
   justify-content: space-between;
   align-items: center;
+}
+@media only screen and (max-width: 600px) {
+  .email-container {
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    padding: 1rem;
+  }
 }
 .email-container--left {
   display: flex;
@@ -400,19 +480,31 @@ a:hover {
   display: flex;
   align-items: center;
 }
-.email-container .fas {
-  font-size: 1.6rem;
-  padding: 1.6rem;
+@media only screen and (max-width: 600px) {
+  .email-container--right {
+    width: 100%;
+  }
 }
 
 .fa-trash {
+  margin-left: 1.6rem;
   cursor: pointer;
+}
+@media only screen and (max-width: 600px) {
+  .fa-trash {
+    margin-left: auto;
+  }
+}
+.fa-trash:hover {
+  color: #e91235;
 }
 
 .fa-envelope {
-  padding: 1.6rem;
+  margin-right: 1.6rem;
 }
-
+.fa-user-alt {
+  margin-right: 1.6rem;
+}
 .confirm-send-email {
   width: 80%;
   display: flex;
@@ -428,23 +520,128 @@ a:hover {
   z-index: 20;
   max-width: 110rem;
 }
+@media only screen and (max-width: 600px) {
+  .confirm-send-email {
+    width: 90%;
+    padding: 2rem;
+  }
+}
+
+.pseudo-product::before {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .pseudo-product::before {
+    display: flex;
+    padding: 0 0.5rem 0 0;
+    font-weight: 700;
+    color: inherit !important;
+    content: "Product: \a";
+  }
+}
+@media only screen and (max-width: 600px) and (max-width: 280px) {
+  .pseudo-product::before {
+    padding: 0;
+  }
+}
+
+.pseudo-price::before {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .pseudo-price::before {
+    display: flex;
+    padding: 0 0.5rem 0 0;
+    font-weight: 700;
+    color: inherit !important;
+    content: "Price: \a";
+  }
+}
+@media only screen and (max-width: 600px) and (max-width: 280px) {
+  .pseudo-price::before {
+    padding: 0;
+  }
+}
+
+.pseudo-location::before {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .pseudo-location::before {
+    display: flex;
+    padding: 0 0.5rem 0 0;
+    font-weight: 700;
+    color: inherit !important;
+    content: "Location: \a";
+  }
+}
+@media only screen and (max-width: 600px) and (max-width: 280px) {
+  .pseudo-location::before {
+    padding: 0;
+  }
+}
+
+.pseudo-url::before {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .pseudo-url::before {
+    display: flex;
+    padding: 0 0.5rem 0 0;
+    font-weight: 700;
+    color: inherit !important;
+    content: "URL: \a";
+  }
+}
+@media only screen and (max-width: 600px) and (max-width: 280px) {
+  .pseudo-url::before {
+    padding: 0;
+  }
+}
+
+.pseudo-additional-info::before {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .pseudo-additional-info::before {
+    display: flex;
+    padding: 0 0.5rem 0 0;
+    font-weight: 700;
+    color: inherit !important;
+    content: "Additional info: \a";
+  }
+}
+@media only screen and (max-width: 600px) and (max-width: 280px) {
+  .pseudo-additional-info::before {
+    padding: 0;
+  }
+}
 
 .heading-1 {
   padding-left: 1rem;
   padding-bottom: 2rem;
   font-size: 3rem;
 }
+@media only screen and (max-width: 600px) {
+  .heading-1 {
+    font-size: 2.5rem;
+  }
+}
 
 .heading-2 {
-  padding-left: 1rem;
   padding-bottom: 2rem;
   font-size: 2.5rem;
+}
+@media only screen and (max-width: 600px) {
+  .heading-2 {
+    font-size: 2rem;
+  }
 }
 
 .heading-3 {
   padding-left: 1rem;
   padding-bottom: 2rem;
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .heading-4 {
