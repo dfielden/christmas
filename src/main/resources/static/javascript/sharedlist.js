@@ -20,7 +20,7 @@ const generateRowHtml = async (item, id) => {
         <div class="cell product pseudo-product">${item.product}</div>
         <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
         <div class="cell location pseudo-location">${item.location}</div>
-        <div class="cell link url pseudo-url">${item.url}</div>
+        <div class="cell url pseudo-url">${item.url}</div>
         <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         <div class="cell btn-cell">
             ${await generateIsSelectedHtml(item)}
@@ -52,10 +52,15 @@ document.addEventListener('click', async (e) => {
 
         const row = e.target.closest('.row');
         const itemId = row.dataset.itemid;
-        await AJAX(`/api/selectitem/${itemId}`);
-        row.querySelector('.btn-cell').innerHTML = `<div class="btn btn--table btn--danger">Unselect</div>`;
-        styleAsSelected(row);
-        return;
+        const alreadySelected = await AJAX(`/api/selectitem/${itemId}`);
+        if (alreadySelected) {
+            row.querySelector('.btn-cell').innerHTML = `<p class="paragraph danger">Error: Item already selected by another user.</p>`;
+            return;
+        } else {
+            row.querySelector('.btn-cell').innerHTML = `<div class="btn btn--table btn--danger">Unselect</div>`;
+            styleAsSelected(row);
+            return;
+        }
     }
     if (e.target.classList.contains('btn--danger')) {
         const row = e.target.closest('.row');

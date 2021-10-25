@@ -186,6 +186,15 @@ public class ChristmasListApplication {
     }
 
     @ResponseBody
+    @GetMapping(value="/api/ownusername")
+    public String getOwnUserName(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        ListAppState state = getOrCreateSession(req, resp);
+        int userId = state.getUserId();
+        return gson.toJson(db.getUsername(userId));
+    }
+
+    @ResponseBody
     @GetMapping(value="/api/myuserid")
     public String getMyUserId(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -195,12 +204,11 @@ public class ChristmasListApplication {
 
     @ResponseBody
     @GetMapping(value="/api/selectitem/{id}")
-    public String selectItem(@PathVariable(value="id") int itemId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public boolean selectItem(@PathVariable(value="id") int itemId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
         int userId = state.getUserId();
-        db.selectItem(itemId, userId);
-        return gson.toJson(itemId);
+        return db.selectItem(itemId, userId);
     }
 
     @ResponseBody

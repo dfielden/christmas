@@ -43,11 +43,12 @@ public class ListDB {
     }
 
     public synchronized int createList(int userId, String listTitle) throws Exception {
-        String query = "INSERT INTO List (user_id, title, time_created) VALUES (?, ?, ?)";
+        String query = "INSERT INTO List (user_id, title, time_created, shared) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, userId);
             stmt.setString(2, listTitle);
             stmt.setLong(3, System.currentTimeMillis());
+            stmt.setBoolean(4, false);
 
             stmt.executeUpdate();
 
@@ -162,6 +163,20 @@ public class ListDB {
         return items;
     }
 
+    public synchronized boolean checkItemSelectedStatus(int itemId) throws Exception {
+        String query = "SELECT * FROM Item WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, itemId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("selected");
+            }
+        }
+        return false;
+    }
+
     public synchronized HashMap<Integer, ListHeader> getMyLists(int userId) throws Exception {
         HashMap<Integer, ListHeader> lists = new HashMap<>();
 
@@ -194,7 +209,7 @@ public class ListDB {
                 return rs.getString("username");
             }
         }
-        throw new IllegalStateException("No user name found");
+        throw new IllegalStateException("No user name found for id: " + userId);
     }
 
     public synchronized String getEmail(int userId) throws Exception {
@@ -263,7 +278,12 @@ public class ListDB {
         }
     }
 
-    public synchronized void selectItem(int itemId, int userId) throws Exception {
+    public synchronized boolean selectItem(int itemId, int userId) throws Exception {
+
+        if (checkItemSelectedStatus(itemId)) {
+            return true;
+        }
+
         String query = "UPDATE Item SET " +
                 "selected = ?, " +
                 "selected_by = ? " +
@@ -275,6 +295,7 @@ public class ListDB {
             stmt.setInt(3, itemId);
             stmt.executeUpdate();
         }
+        return false;
     }
 
     public synchronized void deselectItem(int itemId) throws Exception {
@@ -300,11 +321,30 @@ public class ListDB {
         }
     }
 
-    public synchronized void deleteList(int itemId) throws Exception {
+    public synchronized void deleteList(int listId) throws Exception {
         String query = "DELETE from List WHERE id = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setInt(1, itemId);
+            stmt.setInt(1, listId);
+            stmt.executeUpdate();
+        }
+        deleteAllSharedWithFromList(listId);
+        deleteAllItemsFromList(listId);
+
+    }
+
+    public synchronized void deleteAllSharedWithFromList(int listId) throws Exception {
+        String query = "DELETE from Item WHERE list_id = ?";
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public synchronized void deleteAllItemsFromList(int listId) throws Exception {
+        String query = "DELETE from SharedWith WHERE list_id = ?";
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, listId);
             stmt.executeUpdate();
         }
     }
@@ -354,7 +394,10 @@ public class ListDB {
                     long timeCreated = rs.getLong("time_created");
                     int creatorId = rs.getInt("user_id");
 
-                    lists.put(listId, new ListHeaderShared(title, timeCreated, creatorId));
+                    if (!getEmail(creatorId).equals(emailAddress)) {
+                        lists.put(listId, new ListHeaderShared(title, timeCreated, creatorId));
+                    }
+
                 }
             }
         }

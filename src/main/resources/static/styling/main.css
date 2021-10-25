@@ -13,7 +13,7 @@ html {
   /*1rem = 10px*/
   min-height: 100%;
   overflow-y: scroll;
-  font-family: "Neuton", serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -81,23 +81,33 @@ a:hover {
 }
 .btn--primary {
   background-color: #3e0f8d;
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 .btn--secondary {
-  background-color: #ef00cf;
-  color: #fdfdfd;
+  color: #5723b6;
+  background-color: transparent;
+  border-bottom: 3px solid #5723b6;
+  border-radius: 0;
+  width: inherit;
+  padding: 0.5rem;
+}
+.btn--secondary:hover {
+  background-color: #5723b6;
+  color: #f3eeee;
+}
+.btn--right {
+  float: right;
 }
 .btn--danger {
   background-color: #e91235;
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 .btn--grey-light {
   background-color: #c5c5c5;
   color: #000000;
 }
 .btn--table {
-  width: 80%;
-  max-width: 10rem;
+  width: 8rem;
   height: 2rem;
   align-self: center;
   margin: 0.4rem;
@@ -113,7 +123,7 @@ a:hover {
   margin: 0;
   border-radius: 0;
   background-color: #5723b6;
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 
 .form {
@@ -195,7 +205,7 @@ a:hover {
   align-self: center;
 }
 .form-label--white {
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 @media only screen and (max-width: 600px) {
   .form-label {
@@ -205,10 +215,10 @@ a:hover {
 
 .form-input {
   font-size: 1.6rem;
-  font: "Neuton", serif;
+  font: "Roboto", sans-serif;
   padding: 1.5rem 1rem;
   border-radius: 5px;
-  background-color: #fdfdfd;
+  background-color: #f3eeee;
   border: none;
   border-bottom: 3px solid transparent;
   width: 80%;
@@ -226,7 +236,7 @@ a:hover {
   outline: none;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
   border-bottom: 3px solid #5723b6;
-  background-color: #fdfdfd;
+  background-color: #f3eeee;
 }
 
 .single-row-form {
@@ -234,15 +244,15 @@ a:hover {
   width: 100%;
   display: flex;
   border: 1px solid #000000;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding: 0;
 }
 .single-row-form .input {
   font-size: 1.6rem;
-  font-family: "Neuton", serif;
+  font-family: "Roboto", sans-serif;
   color: inherit;
   padding: 1.5rem 1rem;
-  background-color: #fdfdfd;
+  background-color: #f3eeee;
   border: none;
   border-bottom: 3px solid transparent;
   transition: all 0.2s;
@@ -283,11 +293,11 @@ a:hover {
 }
 .nav-item--selected {
   background-color: #3e0f8d;
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 .nav-item:hover, .nav-item:active {
   background-color: #5723b6;
-  color: #fdfdfd;
+  color: #f3eeee;
 }
 
 .main {
@@ -356,7 +366,7 @@ a:hover {
 }
 
 .confirm-delete-modal {
-  background-color: #fdfdfd;
+  background-color: #f3eeee;
   z-index: 10;
   padding: 3rem;
   width: 60rem;
@@ -383,6 +393,10 @@ a:hover {
   justify-content: space-between;
 }
 
+.lists {
+  background-color: #f3eeee;
+}
+
 .list-table {
   display: flex;
   flex-direction: column;
@@ -393,6 +407,11 @@ a:hover {
   border-bottom: 1px solid black;
   font-size: 1.2rem;
 }
+@media only screen and (max-width: 600px) {
+  .list-table {
+    border-bottom: none;
+  }
+}
 
 .row {
   display: flex;
@@ -402,7 +421,12 @@ a:hover {
 @media only screen and (max-width: 600px) {
   .row {
     flex-direction: column;
-    margin-bottom: 2rem;
+  }
+  .row:not(:last-of-type) {
+    border-bottom: 1px solid black;
+  }
+  .row:not(:first-of-type) {
+    margin-top: 2rem;
   }
 }
 
@@ -413,7 +437,7 @@ a:hover {
 
 .top-row {
   background-color: #3e0f8d;
-  color: #fdfdfd;
+  color: #f3eeee;
   text-align: left;
   display: flex;
 }
@@ -446,6 +470,7 @@ a:hover {
     flex-direction: row;
     width: 100%;
     justify-content: center;
+    margin-bottom: 2rem;
   }
 }
 

@@ -39,7 +39,7 @@ const getRowInfo = (row) => {
         product: row.querySelector('.product').textContent,
         price: row.querySelector('.price').textContent,
         location: row.querySelector('.location').textContent,
-        link: row.querySelector('.link').textContent,
+        link: row.querySelector('.url').textContent,
         additionalInfo: row.querySelector('.additional-info').textContent,
     }
 }
@@ -175,7 +175,7 @@ const generateRowHtml = (item, id, boolListShared) => {
         <div class="cell product pseudo-product">${item.product}</div>
         <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
         <div class="cell location pseudo-location">${item.location}</div>
-        <div class="cell url link pseudo-url">${item.url}</div>
+        <div class="cell url pseudo-url">${item.url}</div>
         <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         ${boolListShared ? '<div class="cell btn-cell"></div>' : '<div class="cell btn-cell"><div class="btn btn--table btn--grey-light">Edit</div><div class="btn btn--table btn--danger">Delete</div></div>'}
       </div>
@@ -186,7 +186,7 @@ const updateRow = (row, item) => {
     row.querySelector('.product').textContent = item.product;
     row.querySelector('.price').textContent = item.price;
     row.querySelector('.location').textContent = item.location;
-    row.querySelector('.link').textContent = item.url;
+    row.querySelector('.url').textContent = item.url;
     row.querySelector('.additional-info').textContent = item.additionalInfo;
 };
 
@@ -294,14 +294,3 @@ const repopulateEmailsAfterSend = async () => {
         appendEmailAddress(generateEmailHtml(emailAddress, emails[emailAddress], true));
     }
 }
-
-
-// const setAllItemsAsShared = () => {
-//     const rows = document.querySelectorAll('.row-item');
-//     rows.forEach(el => setItemAsShared(el.dataset.itemid));
-// }
-//
-// const setItemAsShared = async (itemId) => {
-//     const url = `/shareitem/${itemId}`;
-//     await AJAX(url, true);
-// }

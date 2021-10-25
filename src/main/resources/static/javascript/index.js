@@ -40,6 +40,9 @@ window.addEventListener('load', async (e) => {
         openDeleteModal(id);
     }));
 
+    const userName = await AJAX('/api/ownusername');
+    document.querySelector('.heading-1').textContent = `Welcome, ${userName}`;
+
 });
 
 
@@ -90,7 +93,7 @@ document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('c
     })
 );
 
-document.querySelector('.link--right').addEventListener('click', () => {
+document.querySelector('#create-new-list').addEventListener('click', () => {
     document.querySelector('.new-list').classList.remove('display-none');
 });
 

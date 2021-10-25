@@ -40,8 +40,22 @@
   }
 
   &--secondary {
-    background-color: $color-secondary;
-    color: $color-off-white;
+    color: $color-primary;
+    background-color: transparent;
+    border-bottom: 3px solid $color-primary;
+    border-radius: 0;
+    width: inherit;
+    padding: 0.5rem;
+
+
+    &:hover {
+      background-color: $color-primary;
+      color: $color-off-white;
+    }
+  }
+
+  &--right {
+    float: right;
   }
 
   &--danger {
@@ -55,8 +69,7 @@
   }
 
   &--table {
-    width: 80%;
-    max-width: 10rem;
+    width: 8rem;
     height: 2rem;
     align-self: center;
     margin: 0.4rem;

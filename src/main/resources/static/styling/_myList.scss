@@ -5,6 +5,10 @@
   justify-content: space-between;
 }
 
+.lists {
+  background-color: $color-off-white;
+}
+
 .list-table {
   display: flex;
   flex-direction: column;
@@ -14,6 +18,11 @@
   margin: 0 auto 2rem auto;
   border-bottom: 1px solid black;
   font-size: 1.2rem;
+
+  @media only screen and (max-width: $break-small) {
+    border-bottom: none;
+  }
+
 }
 
 .row {
@@ -23,7 +32,14 @@
 
   @media only screen and (max-width: $break-small) {
     flex-direction: column;
-    margin-bottom: 2rem;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid black;
+    }
+
+    &:not(:first-of-type) {
+      margin-top: 2rem;
+    }
   }
 }
 
@@ -64,6 +80,7 @@
     flex-direction: row;
     width: 100%;
     justify-content: center;
+    margin-bottom: 2rem;
   }
 }
 

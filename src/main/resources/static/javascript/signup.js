@@ -42,7 +42,7 @@ const submitForm = async () => {
             _login(email, pw1);
         }, 500)
     } else {
-        showFormMessage(data, false);
+        showFormMessage(data, false, document.querySelector('.form'));
     }
 }
 
