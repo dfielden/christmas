@@ -8,6 +8,6 @@ public class CreateEmail {
                  usernameFrom + " has invited you view their list of gift ideas: <b>" + listTitle + "</b>" +
                 "<br>" +
                 "<br>" +
-                "Go to <a href=\"http:localhost:8080\">www.giftandpresentideas.com</a> to view the list";
+                "Go to <a href=\"giftandpresentideas.com\">giftandpresentideas.com</a> to view the list";
     }
 }

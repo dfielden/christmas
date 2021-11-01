@@ -427,8 +427,6 @@ public class ListDB {
             stmt.setInt(1, listId);
             stmt.setString(2, emailAddress);
             stmt.executeUpdate();
-            System.out.println("Delete it, listId = " + listId + ", emailAddress = " + emailAddress);
-
         }
     }
 
@@ -460,7 +458,6 @@ public class ListDB {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                System.out.println(rs.getString("email_address") + ", " + userEmail);
                 if (rs.getString("email_address").equals(userEmail)) {
                     return true;
                 }

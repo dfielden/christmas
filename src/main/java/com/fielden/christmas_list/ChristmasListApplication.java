@@ -76,7 +76,6 @@ public class ChristmasListApplication {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
         String myEmail = state.getEmail();
-        System.out.println(myEmail);
         return db.getSharedLists(myEmail);
     }
 
@@ -86,7 +85,6 @@ public class ChristmasListApplication {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
         if (!state.isLoggedIn()) {
-            System.out.println("not logged in");
             return "redirect:/login";
         }
         return "mylist";

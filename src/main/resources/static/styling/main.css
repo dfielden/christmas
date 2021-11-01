@@ -336,7 +336,7 @@ a:hover {
   padding: 1rem;
   display: flex;
   cursor: pointer;
-  background: linear-gradient(145deg, #ac81fa 0%, #d4c4f5 100%);
+  background: linear-gradient(145deg, #ac81fa 0%, #d8cef3 100%);
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
 }
 .list-container:hover {
@@ -417,22 +417,27 @@ a:hover {
   display: flex;
   flex-direction: row;
   width: 100%;
+  background-color: #d8cef3;
+}
+.row:nth-of-type(even) {
+  background-color: #f3eeee;
 }
 @media only screen and (max-width: 600px) {
   .row {
     flex-direction: column;
+    background-color: inherit !important;
   }
   .row:not(:last-of-type) {
     border-bottom: 1px solid black;
   }
   .row:not(:first-of-type) {
-    margin-top: 2rem;
+    padding-top: 2rem;
   }
 }
 
 .row-selected {
-  background-color: #a4a4a4;
-  color: #7c7c7c;
+  background-color: #a4a4a4 !important;
+  color: #7c7c7c !important;
 }
 
 .top-row {
@@ -453,6 +458,7 @@ a:hover {
   flex-basis: calc(100% / 5);
   padding: 1rem;
   align-self: center;
+  word-break: break-word;
 }
 @media only screen and (max-width: 600px) {
   .cell {
@@ -562,6 +568,7 @@ a:hover {
     font-weight: 700;
     color: inherit !important;
     content: "Product: \a";
+    word-break: initial;
   }
 }
 @media only screen and (max-width: 600px) and (max-width: 280px) {
@@ -580,6 +587,7 @@ a:hover {
     font-weight: 700;
     color: inherit !important;
     content: "Price: \a";
+    word-break: initial;
   }
 }
 @media only screen and (max-width: 600px) and (max-width: 280px) {
@@ -598,6 +606,7 @@ a:hover {
     font-weight: 700;
     color: inherit !important;
     content: "Location: \a";
+    word-break: initial;
   }
 }
 @media only screen and (max-width: 600px) and (max-width: 280px) {
@@ -616,6 +625,7 @@ a:hover {
     font-weight: 700;
     color: inherit !important;
     content: "URL: \a";
+    word-break: initial;
   }
 }
 @media only screen and (max-width: 600px) and (max-width: 280px) {
@@ -634,6 +644,7 @@ a:hover {
     font-weight: 700;
     color: inherit !important;
     content: "Additional info: \a";
+    word-break: initial;
   }
 }
 @media only screen and (max-width: 600px) and (max-width: 280px) {

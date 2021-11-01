@@ -1,4 +1,4 @@
-import {AJAX} from "./ajax.js";
+import {AJAX, showFormMessage} from "./ajax.js";
 import {Item} from "./Item.js";
 
 window.addEventListener('load', async (e) => {
@@ -90,6 +90,8 @@ const closeItemForm = () => {
     document.querySelector('#submit-item').classList.remove('display-none');
     document.querySelector('#edit-item').classList.add('display-none');
     document.querySelector('.header-add-edit').textContent = 'Add new entry';
+    document.querySelector('.form-msg').textContent = '';
+
 }
 
 const openItemForm = () => {
@@ -128,6 +130,7 @@ const updateFormToEditItem = (itemId) => {
 
 const submitAddItemForm = async () => {
     if (!document.querySelector('#input-product').value) {
+        showFormMessage("Please complete in the Item/product row of this form", false, document.querySelector('.form-add-edit'));
         return;
     }
 
@@ -150,6 +153,7 @@ const submitAddItemForm = async () => {
 
 const editItemForm = async () => {
     if (!document.querySelector('#input-product').value) {
+        showFormMessage("Please complete in the Item/product row of this form", false, document.querySelector('.form-add-edit'));
         return;
     }
 
@@ -225,7 +229,6 @@ document.querySelector('.btn-form-single-row').addEventListener('click', async (
 });
 
 const generateEmailHtml = (emailAddress, boolEmailSent, responseToSubmit = false) => {
-    console.log('bool sent, ' + boolEmailSent)
     return `
         <div class="email-container">
             <div class="email-container--left">
@@ -284,6 +287,7 @@ const sendEmails = async () => {
     const url = `/sharelist/${listId}`;
     await AJAX(url, allEmailAddresses);
     await repopulateEmailsAfterSend();
+    clearEditBtns();
 }
 
 const repopulateEmailsAfterSend = async () => {
@@ -293,4 +297,9 @@ const repopulateEmailsAfterSend = async () => {
     for (const emailAddress in emails) {
         appendEmailAddress(generateEmailHtml(emailAddress, emails[emailAddress], true));
     }
+}
+
+const clearEditBtns = () => {
+    const btnContainers = document.querySelectorAll('.btn-cell');
+    btnContainers.forEach(el => el.innerHTML = '');
 }
