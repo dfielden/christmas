@@ -113,7 +113,8 @@ document.querySelector('#create-list').addEventListener('click', async () => {
     await submitCreateListForm();
 });
 
-document.querySelector('.form').addEventListener('submit', async () => {
+document.querySelector('.form').addEventListener('submit', async (e) => {
+    e.preventDefault();
     await submitCreateListForm();
 })
 

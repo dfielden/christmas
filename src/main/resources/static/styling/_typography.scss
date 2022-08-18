@@ -37,10 +37,20 @@
 
 .link {
   color: blue;
-  cursor: pointer;
+  font-size: 1rem !important;
 
   &--right {
     float: right;
+    text-align: right;
+    margin-top: -1.5rem;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    cursor: pointer;
+  }
+
+  &--normal {
+    font-size: inherit !important;
   }
 }
 

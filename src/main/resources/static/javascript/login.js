@@ -13,12 +13,13 @@ document.querySelector('.form').addEventListener('submit', async () => {
 
 const submitForm = async () => {
     // validation
-    const email = document.querySelector('#input-email').value;
+    const username = document.querySelector('#input-user').value;
     const pw = document.querySelector('#input-password').value;
 
     const data = await AJAX('/login', {
-        email: email,
+        username: username,
         password: pw,
+        email: ""
     });
 
     if (data === LOGIN_SUCCESS_VALUE) {

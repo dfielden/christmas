@@ -9,6 +9,8 @@ public final class InitiateDBQueries {
                 "id INTEGER PRIMARY KEY NOT NULL, " +
                 "username TEXT, " +
                 "email TEXT, " +
+                "setup BOOLEAN, " +
+                "default_user BOOLEAN, " +
                 "hashed_pw TEXT, " +
                 "salt TEXT)";
     }
@@ -30,7 +32,18 @@ public final class InitiateDBQueries {
                 "list_id INTEGER, " +
                 "email_address TEXT, " +
                 "email_sent BOOLEAN, " +
-                "FOREIGN KEY (list_id) REFERENCES User(list)" +
+                "FOREIGN KEY (list_id) REFERENCES List(id)" +
+                ")";
+    }
+
+    private static String createCustomUserTable() {
+        return "CREATE TABLE IF NOT EXISTS CustomUser (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                "user_id INTEGER, " +
+                "shared_with INTEGER, " +
+                "email TEXT, " +
+                "FOREIGN KEY (user_id) REFERENCES User(id)" +
+                "FOREIGN KEY (shared_with) REFERENCES User(id)" +
                 ")";
     }
 
@@ -56,6 +69,8 @@ public final class InitiateDBQueries {
         queries.add(createListTable());
         queries.add(createItemTable());
         queries.add(createSharedWithTable());
+        queries.add(createCustomUserTable());
+
         return queries;
     }
 }

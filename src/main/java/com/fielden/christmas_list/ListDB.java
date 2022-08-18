@@ -8,25 +8,33 @@ public class ListDB {
 
     private final Connection connect;
 
-    public ListDB() throws Exception {
+    public ListDB(HashMap<String, String> users) throws Exception {
         connect = DriverManager.getConnection("jdbc:sqlite:christmaslist.db", "root", "");
 
         // Initiate db tables if they do not exist
         initiateTables();
 
+        // Add users if they have not been added
+        addUsers(users);
     }
 
     public synchronized void signup(String email, String username, String hashedPassword, String salt) throws Exception {
-        if (checkIfEmailExists(email)) {
-            throw new IllegalStateException("Email is already in use. Please login or sign up with a different email address.");
+        if (!checkIfEmailExists(email)) {
+            throw new IllegalStateException(username + " is not a valid username. Please use the name assigned to you via email");
         }
 
-        String query = "INSERT INTO User (email, username, hashed_pw, salt) VALUES (?, ?, ?, ?)";
+        String query = "Update User SET " +
+                "hashed_pw = ?, " +
+                "salt = ?, " +
+                "setup = ?" +
+                "WHERE email = ? AND username = ?";
+
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setString(1, email);
-            stmt.setString(2, username);
-            stmt.setString(3, hashedPassword);
-            stmt.setString(4, salt);
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, salt);
+            stmt.setBoolean(3, true);
+            stmt.setString(4, email);
+            stmt.setString(5, username);
 
             stmt.executeUpdate();
         }
@@ -83,6 +91,65 @@ public class ListDB {
         }
     }
 
+    public synchronized int addUser(String username, String email, boolean defaultUser) throws Exception {
+        String query = "INSERT INTO User (username, email, setup, default_user) VALUES (?, ?, ?, ?)";
+
+        // if user already added, return the id
+        int userId = getUserId(email);
+        if (userId > -1) {
+            return userId;
+        }
+
+        // otherwise add user to db
+
+        try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, username);
+            stmt.setString(2, email);
+            stmt.setBoolean(3, false);
+            stmt.setBoolean(4, defaultUser);
+
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (!rs.next()) {
+                throw new IllegalStateException("Unable to get generated key for added User");
+            }
+            return rs.getInt(1);
+        }
+    }
+
+    public synchronized int addCustomShare(int userId, int sharedUserId, String sharedEmail) throws Exception {
+        String query = "INSERT INTO CustomUser (user_id, shared_with, email) VALUES (?, ?, ?)";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, sharedUserId);
+            stmt.setString(3, sharedEmail);
+
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (!rs.next()) {
+                throw new IllegalStateException("Unable to get generated key for added User");
+            }
+            return rs.getInt(1);
+        }
+    }
+
+    public synchronized int getUserId(String email) throws Exception {
+        String query = "SELECT * FROM User WHERE email = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return -1;
+    }
+
     public synchronized void setListAsShared(int listId) throws Exception {
         String query = "UPDATE List SET " +
                 "shared = true " +
@@ -129,6 +196,40 @@ public class ListDB {
         throw new IllegalStateException("No title found for id " + listId);
     }
 
+    public synchronized String getEmailFromUsernameLogin(String username) throws Exception {
+
+        String query = "SELECT * FROM User WHERE username = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                if (rs.getBoolean("setup")) {
+                    return rs.getString("email");
+                } else {
+                    throw new IllegalStateException("User: " + username + " has not signed up yet...");
+                }
+            }
+        }
+        throw new IllegalStateException(username + " is not a valid username. Please use the name assigned to you via email.");
+    }
+
+    public synchronized String getEmailFromUsernameSignup(String username) throws Exception {
+
+        String query = "SELECT * FROM User WHERE username = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("email");
+            }
+        }
+        throw new IllegalStateException(username + " is not a valid username. Please use the name assigned to you via email.");
+    }
+
     public synchronized HashMap<Integer, ItemInList> getListAndHideSelectedStatus(int listId, int userId) throws Exception {
         HashMap<Integer, ItemInList> items = getList(listId, userId);
         for (ItemInList item : items.values()) {
@@ -161,6 +262,21 @@ public class ListDB {
             }
         }
         return items;
+    }
+
+    public synchronized ArrayList<String> getCustomContacts(int userId) throws Exception {
+        ArrayList<String> customContacts = new ArrayList<>();
+        String query = "SELECT * FROM CustomUser WHERE user_id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                customContacts.add(rs.getString("email"));
+            }
+        }
+        return customContacts;
     }
 
     public synchronized boolean checkItemSelectedStatus(int itemId) throws Exception {
@@ -222,6 +338,21 @@ public class ListDB {
 
             if (rs.next()) {
                 return rs.getString("email");
+            }
+        }
+        throw new IllegalStateException("No user name found");
+    }
+
+    public synchronized Boolean isDefaultUser(int userId) throws Exception {
+
+        String query = "SELECT * FROM User WHERE id = ?";
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("default_user");
             }
         }
         throw new IllegalStateException("No user name found");
@@ -404,8 +535,8 @@ public class ListDB {
         return lists;
     }
 
-    public synchronized HashMap<String, Boolean> getSharedEmails(int listId) throws Exception {
-        HashMap<String, Boolean> emails = new HashMap<>();
+    public synchronized HashMap<String, Boolean> getSharedContacts(int listId) throws Exception {
+        HashMap<String, Boolean> contacts = new HashMap<>();
 
         String query = "SELECT * FROM SharedWith WHERE list_id = ?";
 
@@ -414,10 +545,12 @@ public class ListDB {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                emails.put(rs.getString("email_Address"), rs.getBoolean("email_sent"));
+                String email = rs.getString("email_address");
+                String contact = getuserDetailsFromEmail(email).get("userName");
+                contacts.put(contact, rs.getBoolean("email_sent"));
             }
         }
-        return emails;
+        return contacts;
     }
 
     public synchronized void deleteSharedEmail(int listId, String emailAddress) throws Exception {
@@ -497,5 +630,22 @@ public class ListDB {
         return userDetails;
     }
 
+    private synchronized void addUsers(HashMap<String, String> users) throws Exception {
+        String query = "SELECT * FROM User";
 
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                for (String username : users.keySet()) {
+                    addUser(username, users.get(username), true);
+                }
+            }
+
+        }
+    }
+
+    public synchronized void addEmailUser(String email, int addedByUserId) {
+
+    }
 }

@@ -17,7 +17,17 @@ window.addEventListener('load', async (e) => {
 
     document.querySelector('.heading-1').textContent = await AJAX(`/api/title/${listId}`);
 
+    // get custom contacts and add to select
+    const customContacts = await getCustomContacts();
+    customContacts.forEach(contact => {
+        let newOption = new Option(contact, contact);
+        document.querySelector('#input-user').add(newOption, undefined);
+    })
 });
+
+const getCustomContacts = async () => {
+    return await AJAX('/api/customcontacts');
+}
 
 document.querySelector('.list-table').addEventListener('click', async (e) => {
     if (e.target.classList.contains('btn--grey-light')) {
@@ -48,12 +58,52 @@ const removeRowFromDom = (row) => {
     row.remove();
 }
 
-document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('click', () => {
+const closeAllForms = () => {
     closeItemForm();
     closeEmailForm()
     closeSendEmailCheck();
+    closeNewEmailForm();
+}
+
+document.querySelectorAll('.form__close').forEach((el) => el.addEventListener('click', () => {
+    closeAllForms();
     })
 );
+
+document.querySelector('#link-new-email').addEventListener('click', () => {
+    document.querySelector('body').classList.add('body-hidden');
+    openNewEmailForm();
+});
+
+
+
+document.querySelector('#btn-add-email').addEventListener('click', async () => {
+    await addNewContact();
+});
+
+document.querySelector('#new-email-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await addNewContact();
+})
+
+const addNewContact = async () => {
+    // get email address
+    const emailAddress = document.querySelector('#input-new-email').value.trim();
+    console.log(emailAddress);
+
+    // add as new user, visible only to current user
+    const user = await AJAX('/newuser', emailAddress);
+
+    // close add new email form
+    closeNewEmailForm();
+
+    // reopen share with form
+    openEmailForm();
+    let newOption = new Option(emailAddress, emailAddress);
+    document.querySelector('#input-user').add(newOption, undefined);
+    document.querySelector('#input-user').value = emailAddress;
+
+}
 
 document.querySelector('.confirm-send-email__close').addEventListener('click', () => {
     closeSendEmailCheck();
@@ -68,6 +118,8 @@ document.querySelector('#btn-confirmSendEmail').addEventListener('click', () => 
 })
 
 document.querySelector('#new-item').addEventListener('click', () => {
+    document.querySelector('body').classList.add('body-hidden');
+    window.scrollTo(0,0);
     openItemForm();
 });
 
@@ -76,15 +128,19 @@ document.querySelector('#submit-item').addEventListener('click', () => {
 });
 
 document.querySelector('#edit-item').addEventListener('click', () => {
+    document.querySelector('body').classList.add('body-hidden');
+    window.scrollTo(0,0);
     editItemForm();
 });
 
 document.querySelector('#share-list').addEventListener('click', () => {
+    document.querySelector('body').classList.add('body-hidden');
     openEmailForm();
 })
 
 
 const closeItemForm = () => {
+    document.querySelector('body').classList.remove('body-hidden');
     document.querySelector('.form-add-edit').reset();
     document.querySelector('.new-entry').classList.add('display-none');
     document.querySelector('#submit-item').classList.remove('display-none');
@@ -94,7 +150,19 @@ const closeItemForm = () => {
 
 }
 
+const openNewEmailForm = () => {
+    closeAllForms();
+    document.querySelector('.add-new-email').classList.remove('display-none');
+}
+
+const closeNewEmailForm = () => {
+    document.querySelector('#new-email-form').reset();
+    document.querySelector('.add-new-email').classList.add('display-none');
+}
+
 const openItemForm = () => {
+    document.querySelector('body').classList.add('body-hidden');
+    window.scrollTo(0,0);
     document.querySelector('.new-entry').classList.remove('display-none');
 }
 
@@ -179,7 +247,7 @@ const generateRowHtml = (item, id, boolListShared) => {
         <div class="cell product pseudo-product">${item.product}</div>
         <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
         <div class="cell location pseudo-location">${item.location}</div>
-        <div class="cell url pseudo-url">${item.url}</div>
+        <div class="cell url link pseudo-url"><a href="${item.url}" target="_blank">${item.url}</a></div>
         <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         ${boolListShared ? '<div class="cell btn-cell"></div>' : '<div class="cell btn-cell"><div class="btn btn--table btn--grey-light">Edit</div><div class="btn btn--table btn--danger">Delete</div></div>'}
       </div>
@@ -196,7 +264,7 @@ const updateRow = (row, item) => {
 
 const convertPriceIfZero = (item) => {
     if (item.price) {
-        return `£${item.price}`;
+        return `£${Number((item.price)).toFixed(2)}`;
     }
     return '';
 }
@@ -209,31 +277,38 @@ const appendItemRow = (html) => {
 document.querySelector('.btn-form-single-row').addEventListener('click', async (e) => {
     e.preventDefault();
 
-    // validate email
-    const emailAddress = document.querySelector('#input-email').value.trim();
-    if (!emailAddress) {
+    // validate username
+    const user = document.querySelector('#input-user').value.trim();
+    if (!user) {
         return;
     }
 
+    const alreadyAddedContacts = getContacts();
+    for (let i = 0; i < alreadyAddedContacts.length; i++) {
+        if (user === alreadyAddedContacts[i]) {
+            return;
+        }
+    }
+
     // append
-    const html = generateEmailHtml(emailAddress, false );
+    const html = generateEmailHtml(user, false );
     appendEmailAddress(html);
 
     // add to db
     const listId = getListId();
     const url = `/email/${listId}`;
-    await AJAX(url, emailAddress);
+    await AJAX(url, user);
 
     // clear form
     document.querySelector('#email-form').reset();
 });
 
-const generateEmailHtml = (emailAddress, boolEmailSent, responseToSubmit = false) => {
+const generateEmailHtml = (username, boolEmailSent, responseToSubmit = false) => {
     return `
         <div class="email-container">
             <div class="email-container--left">
                 <i class="fas fa-user-alt"></i>
-                <div class="email-address">${emailAddress}</div>   
+                <div class="email-address">${username}</div>   
             </div>
             <div class="email-container--right ${boolEmailSent ? 'success' : responseToSubmit ? 'danger' : ''}">
                 ${boolEmailSent ? "<i class=\"far fa-envelope\"></i>Email sent" : "<i class=\"far fa-envelope\"></i>Email not sent<i class=\"fas fa-trash\"></i>"}
@@ -247,13 +322,13 @@ const appendEmailAddress = (html) => {
     document.querySelector('.email-list').insertAdjacentHTML('beforeend', html);
 };
 
-const getEmailAddresses = () => {
-    const emailArray = [];
-    const emails = document.querySelectorAll('.email-address');
-    emails.forEach((el) => {
-        emailArray.push(el.textContent);
+const getContacts = () => {
+    const contactArray = [];
+    const contacts = document.querySelectorAll('.email-address');
+    contacts.forEach((el) => {
+        contactArray.push(el.textContent);
     })
-    return emailArray;
+    return contactArray;
 }
 
 const getListId = () => {
@@ -273,7 +348,8 @@ document.addEventListener('click', async (e) => {
     }
 });
 
-document.querySelector('#btn-shareList').addEventListener('click', async () => {
+document.querySelector('#btn-shareList').addEventListener('click', async (e) => {
+    e.preventDefault();
     document.querySelector('.confirm-send-email').classList.remove('display-none');
     document.querySelector('#email-form').style.zIndex = "4";
 });
@@ -282,10 +358,10 @@ document.querySelector('#btn-shareList').addEventListener('click', async () => {
 
 const sendEmails = async () => {
     closeSendEmailCheck();
-    const allEmailAddresses = getEmailAddresses();
+    const allContacts = getContacts();
     const listId = getListId();
     const url = `/sharelist/${listId}`;
-    await AJAX(url, allEmailAddresses);
+    await AJAX(url, allContacts);
     await repopulateEmailsAfterSend();
     clearEditBtns();
 }

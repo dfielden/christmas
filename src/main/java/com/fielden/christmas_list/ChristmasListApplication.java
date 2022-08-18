@@ -7,14 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
-import org.springframework.mail.MailAuthenticationException;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.JavaMailSender;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.Cookie;
@@ -38,13 +36,22 @@ public class ChristmasListApplication {
     private static final Gson gson = new Gson();
     private static final Random rand = new Random();
     private final Map<String, ListAppState> sessions = new ConcurrentHashMap<>(); // cookieValue, ListAppState
+    private final HashMap<String, String> users = new HashMap<>();
     private static final String LIST_COOKIE_NAME = "LISTAPPCOOKIE";
     public static final String LOGIN_SUCCESS_RESPONSE_VALUE = "LOGIN_SUCCESS";
     public static final String SIGNUP_SUCCESS_RESPONSE_VALUE = "SIGNUP_SUCCESS";
     public static final String LOGOUT_SUCCESS_RESPONSE_VALUE = "LOGOUT_SUCCESS";
 
     public ChristmasListApplication() throws Exception {
-        db = new ListDB();
+        users.put("Dan", "dan@danfielden.com");
+        users.put("James", "james@jgubby.com");
+        users.put("Jan", "janfielden38@gmail.com");
+        users.put("Julia", "juliaafielden@gmail.com");
+        users.put("Madelaine", "madelaine.fielden@gmail.com");
+        users.put("Maddy", "maddyj4.x@gmail.com");
+        users.put("Mark", "markf.mobile25@googlemail.com");
+
+        db = new ListDB(users);
     }
 
     public static void main(String[] args) {
@@ -84,7 +91,9 @@ public class ChristmasListApplication {
     public String myList(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
+        System.out.println(state);
         if (!state.isLoggedIn()) {
+            System.out.println("not logged in");
             return "redirect:/login";
         }
         return "mylist";
@@ -105,6 +114,7 @@ public class ChristmasListApplication {
     public HashMap<Integer, ItemInList> getMyListFromId(@PathVariable(value="id") int listId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
+        System.out.println(state);
         int userId = state.getUserId();
         if (!db.checkUserOwnsList(listId, userId)) {
             throw new IllegalStateException("User does not own list");
@@ -122,6 +132,16 @@ public class ChristmasListApplication {
             throw new IllegalStateException("User does not have permission to view list");
         }
         return db.getList(listId, userId);
+    }
+
+    @ResponseBody
+    @GetMapping("/api/customcontacts")
+    public ArrayList<String> getCustomContacts(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        ListAppState state = getOrCreateSession(req, resp);
+        int userId = state.getUserId();
+        return db.getCustomContacts(userId);
+
     }
 
     @ResponseBody
@@ -155,8 +175,8 @@ public class ChristmasListApplication {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public String signup(@RequestBody Login login, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         try {
-            String email = login.getEmail();
             String username = login.getUsername();
+            String email = db.getEmailFromUsernameSignup(username);
             String typedPassword = login.getPassword();
             String[] hashedPassword = PasswordSecurity.createHashedPassword(typedPassword);
 
@@ -231,15 +251,16 @@ public class ChristmasListApplication {
     @PostMapping(value="/email/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addEmailAddress(@PathVariable(value="id") int listId, @RequestBody String emailAddress, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public String addEmailAddress(@PathVariable(value="id") int listId, @RequestBody String contact, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         ListAppState state = getOrCreateSession(req, resp);
+        String emailAddress = db.getEmailFromUsernameSignup(contact.substring(1, contact.length()-1));
 
         if (emailAddress.equals(state.getEmail())) {
             throw new IllegalArgumentException("You cannot share your list with yourself");
         }
 
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        db.addSharedWith(listId, emailAddress.substring(1, emailAddress.length()-1));
+        db.addSharedWith(listId, emailAddress);
         return gson.toJson(emailAddress);
     }
 
@@ -247,30 +268,46 @@ public class ChristmasListApplication {
     @PostMapping(value="/deleteemail/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteEmailAddress(@PathVariable(value="id") int listId, @RequestBody String emailAddress, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public String deleteEmailAddress(@PathVariable(value="id") int listId, @RequestBody String contact, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        db.deleteSharedEmail(listId, emailAddress.substring(1, emailAddress.length()-1));
+        String emailAddress = db.getEmailFromUsernameSignup(contact.substring(1, contact.length() - 1));
+        db.deleteSharedEmail(listId, emailAddress);
         return gson.toJson(emailAddress);
     }
 
     @ResponseBody
-    @GetMapping("/api/emails/{id}")
-    public String getListEmails(@PathVariable(value="id") int listId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    @PostMapping(value="/newuser",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addEmailAddress(@RequestBody String email, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        ListAppState state = getOrCreateSession(req, resp);
+        int userId = state.getUserId();
+
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        return gson.toJson(db.getSharedEmails(listId));
+        int newUserId = db.addUser(email.substring(1, email.length()-1), email.substring(1, email.length()-1), false); // returns either id of existing user (if previously added, or id of newly added user)
+        db.addCustomShare(userId, newUserId, email.substring(1, email.length()-1));
+        return gson.toJson(email);
+    }
+
+    @ResponseBody
+    @GetMapping("/api/emails/{id}")
+    public String getListContacts(@PathVariable(value="id") int listId, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        return gson.toJson(db.getSharedContacts(listId));
     }
 
     @ResponseBody
     @PostMapping("/sharelist/{id}")
-    public HashMap<String, Boolean> postMessage(@PathVariable(value="id") int listId, @RequestBody ArrayList<String> emails, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public HashMap<String, Boolean> postMessage(@PathVariable(value="id") int listId, @RequestBody ArrayList<String> contacts, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HashMap<String, Boolean> sentStatus = new HashMap<>();
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         ListAppState state = getOrCreateSession(req, resp);
         int userId = state.getUserId();
         String usernameFrom = db.getUsername(userId);
         String listTitle = db.getTitle(listId, userId);
-        for (String email : emails) {
-            if(sendEmail(email, usernameFrom, listTitle, userId, listId) || db.checkEmailSent(email, listId)) {
+        for (String contact : contacts) {
+            String email = db.getEmailFromUsernameSignup(contact);
+            if(db.checkEmailSent(email, listId) || sendEmail(email, usernameFrom, listTitle, userId, listId)) {
                 sentStatus.put(email, true);
                 db.updateEmailSent(email, listId);
             } else {
@@ -309,13 +346,22 @@ public class ChristmasListApplication {
             return false;
         }
 
+        int sendToId = db.getUserId(sendTo);
+        boolean defaultUser = db.isDefaultUser(sendToId);
+
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
             email.setFrom("giftandpresentideas@gmail.com");
             email.setTo(sendTo);
             email.setSubject(usernameFrom + " has invited you to look at their list!");
-            email.setText(CreateEmail.createEmail(usernameFrom, listTitle ), true);
+
+
+            if (defaultUser) {
+                email.setText(CreateEmail.createEmail(usernameFrom, listTitle), true);
+            } else {
+                email.setText(CreateEmail.createEmailGuest(usernameFrom, listTitle, sendTo), true);
+            }
 
             mailSender.send(mimeMessage);
         } catch (Exception e) {
@@ -342,8 +388,9 @@ public class ChristmasListApplication {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public String login(@RequestBody Login login, HttpServletRequest req, HttpServletResponse resp) throws Exception {
         try {
-            String email = login.getEmail();
+            String username = login.getUsername();
             String enteredPassword = login.getPassword();
+            String email = db.getEmailFromUsernameLogin(username);
 
             HashMap<String, String> userDetails = db.getuserDetailsFromEmail(email);
             String salt = userDetails.get("salt");
@@ -351,7 +398,6 @@ public class ChristmasListApplication {
 
             if (hashedPassword.equals(PasswordSecurity.hashString(enteredPassword + salt))) {
                 // User credentials OK.
-
                 ListAppState state = getOrCreateSession(req, resp);
                 state.setUserName(userDetails.get("userName"));
                 state.setUserId(Integer.parseInt(userDetails.get("userId")));

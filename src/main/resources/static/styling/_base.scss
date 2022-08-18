@@ -2,6 +2,7 @@
 $color-primary: #5723b6;
 $color-primary-light: #ac81fa;
 $color-primary-dark: #3e0f8d;
+$color-primary-lighter: #cab9f3;
 $color-primary-faint: #d8cef3;
 
 $color-secondary: #ef00cf;
@@ -51,7 +52,7 @@ $break-largest: 1500px;
 html {
   font-size: 62.5%; /*1rem = 10px*/
   min-height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   font-family: $font-primary;
   //color: $color-primary-dark;
 }
@@ -62,16 +63,21 @@ body {
   height: 100%;
   width: 100%;
   background: $gradient-grey;
-  position: absolute;
   background-size: cover;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
   padding: 2rem;
   font-size: 1.6rem;
   display: flex;
   flex-direction: column;
   color: $color-black;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  //overflow: auto;
+}
+
+.body-hidden {
+  overflow: hidden;
+  height: 100vh;
+
 }
 
 // Required to stop img stretching on iPhone
@@ -84,11 +90,23 @@ a {
   color: inherit;
   text-decoration: none;
 
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-    cursor: pointer;
+  &:not(:empty) {
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
   }
+
+}
+
+select {
+  -webkit-appearance: none;
+  background: $color-off-white url('https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_keyboard_arrow_down_48px-128.png') no-repeat;
+  background-size: 2rem;
+  background-position: right 1rem center;
+  border-radius: 0;
+  margin-bottom: 0;
 }
 
 

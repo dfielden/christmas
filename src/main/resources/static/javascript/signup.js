@@ -14,7 +14,6 @@ document.querySelector('.form').addEventListener('submit', async () => {
 
 const submitForm = async () => {
     // validation
-    const email = document.querySelector('#input-email').value;
     const username = document.querySelector('#input-username').value;
     const pw1 = document.querySelector('#input-password-1').value;
     const pw2 = document.querySelector('#input-password-2').value;
@@ -24,13 +23,12 @@ const submitForm = async () => {
         return;
     }
 
-    if (!(email && username && pw1 && pw2)) {
+    if (!(username && pw1 && pw2)) {
         showFormMessage("Please ensure all fields are completed", false, document.querySelector('.form'));
         return;
     }
 
     const data = await AJAX('/signup', {
-        email: email,
         password: pw1,
         username: username,
     });
@@ -39,18 +37,18 @@ const submitForm = async () => {
         showFormMessage("Sign-up successful!", true, document.querySelector('.form'));
         setTimeout(() => {
             // if signup successful, login and redirect to home
-            _login(email, pw1);
+            _login(username, pw1);
         }, 500)
     } else {
         showFormMessage(data, false, document.querySelector('.form'));
     }
 }
 
-const _login = async (email, pw) => {
+const _login = async (username, pw) => {
     const data = await AJAX('/login', {
-        email: email,
+        username: username,
         password: pw,
-        username: "",
+        email: "",
     });
 
     if (data === LOGIN_SUCCESS_VALUE) {

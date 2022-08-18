@@ -16,11 +16,11 @@ window.addEventListener('load', async (e) => {
 
 const generateRowHtml = async (item, id) => {
     return `
-      <div class="row ${item.selected ? 'row-selected' : ''}" data-itemid="${id}">
+      <div class="row row-item ${item.selected ? 'row-selected' : ''} ${await isSelectedByMe(item) ? 'selected-me' : ''}" data-itemid="${id}">
         <div class="cell product pseudo-product">${item.product}</div>
         <div class="cell price pseudo-price">${convertPriceIfZero(item)}</div>
         <div class="cell location pseudo-location">${item.location}</div>
-        <div class="cell url pseudo-url">${item.url}</div>
+        <div class="cell url pseudo-url link"><a href="${item.url}" target="_blank">${item.url}</a></div>
         <div class="cell additional-info pseudo-additional-info">${item.additionalInfo}</div>
         <div class="cell btn-cell">
             ${await generateIsSelectedHtml(item)}
@@ -59,6 +59,7 @@ document.addEventListener('click', async (e) => {
         } else {
             row.querySelector('.btn-cell').innerHTML = `<div class="btn btn--table btn--danger">Unselect</div>`;
             styleAsSelected(row);
+            styleAsSelectedByMe(row);
             return;
         }
     }
@@ -75,14 +76,19 @@ const styleAsSelected = (row) => {
     row.classList.add('row-selected');
 }
 
+const styleAsSelectedByMe = (row) => {
+    row.classList.add('selected-me');
+}
+
 const styleAsNotSelected = (row) => {
     row.classList.remove('row-selected');
+    row.classList.remove('selected-me');
 }
 
 
 const convertPriceIfZero = (item) => {
     if (item.price) {
-        return `£${item.price}`;
+        return `£${Number((item.price)).toFixed(2)}`;
     }
     return '';
 }

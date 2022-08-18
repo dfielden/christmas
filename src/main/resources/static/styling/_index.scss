@@ -80,6 +80,11 @@
   transform: translate(-50%, -50%);
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgb(0 0 0 / 30%);
+
+  @media only screen and (max-width: $break-small) {
+    width: 90%;
+    padding: 2rem;
+  }
 }
 
 .btn-container {

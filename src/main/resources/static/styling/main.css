@@ -12,7 +12,7 @@ html {
   font-size: 62.5%;
   /*1rem = 10px*/
   min-height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   font-family: "Roboto", sans-serif;
 }
 
@@ -22,16 +22,19 @@ body {
   height: 100%;
   width: 100%;
   background: linear-gradient(145deg, rgba(197, 197, 197, 0.8) 0%, rgba(232, 232, 232, 0.8) 100%);
-  position: absolute;
   background-size: cover;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
   padding: 2rem;
   font-size: 1.6rem;
   display: flex;
   flex-direction: column;
   color: #000000;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.body-hidden {
+  overflow: hidden;
+  height: 100vh;
 }
 
 img {
@@ -43,10 +46,19 @@ a {
   color: inherit;
   text-decoration: none;
 }
-a:hover {
+a:not(:empty):hover {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+select {
+  -webkit-appearance: none;
+  background: #f3eeee url("https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_keyboard_arrow_down_48px-128.png") no-repeat;
+  background-size: 2rem;
+  background-position: right 1rem center;
+  border-radius: 0;
+  margin-bottom: 0;
 }
 
 .btn, .btn:link, .btn:visited {
@@ -130,7 +142,7 @@ a:hover {
   width: 80%;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -148,6 +160,11 @@ a:hover {
     height: 100%;
     padding: 3rem;
   }
+}
+
+.form-add-edit {
+  height: 100%;
+  max-height: 85rem;
 }
 
 .form-heading {
@@ -251,7 +268,7 @@ a:hover {
   font-size: 1.6rem;
   font-family: "Roboto", sans-serif;
   color: inherit;
-  padding: 1.5rem 1rem;
+  padding: 0 1rem;
   background-color: #f3eeee;
   border: none;
   border-bottom: 3px solid transparent;
@@ -377,6 +394,12 @@ a:hover {
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
 }
+@media only screen and (max-width: 600px) {
+  .confirm-delete-modal {
+    width: 90%;
+    padding: 2rem;
+  }
+}
 
 .btn-container {
   display: flex;
@@ -410,6 +433,8 @@ a:hover {
 @media only screen and (max-width: 600px) {
   .list-table {
     border-bottom: none;
+    margin: 0;
+    width: 100%;
   }
 }
 
@@ -435,9 +460,23 @@ a:hover {
   }
 }
 
+.row-item:hover {
+  background-color: #cab9f3;
+}
+
 .row-selected {
   background-color: #a4a4a4 !important;
   color: #7c7c7c !important;
+}
+.row-selected:hover {
+  background-color: #a4a4a4 !important;
+}
+.row-selected .url::before {
+  color: #7c7c7c !important;
+}
+
+.selected-me {
+  border: 3px solid #3e0f8d !important;
 }
 
 .top-row {
@@ -462,7 +501,8 @@ a:hover {
 }
 @media only screen and (max-width: 600px) {
   .cell {
-    padding: 0.3rem;
+    padding: 0.5rem;
+    align-self: flex-start;
   }
 }
 
@@ -653,6 +693,22 @@ a:hover {
   }
 }
 
+.url {
+  flex-basis: calc(100% / 3);
+}
+.url::before {
+  color: #000000 !important;
+  font-size: 1.2rem !important;
+}
+
+.item {
+  flex-basis: calc(100% / 3);
+}
+
+.product {
+  flex-basis: calc(100% / 3);
+}
+
 .heading-1 {
   padding-left: 1rem;
   padding-bottom: 2rem;
@@ -693,10 +749,19 @@ a:hover {
 
 .link {
   color: blue;
-  cursor: pointer;
+  font-size: 1rem !important;
 }
 .link--right {
   float: right;
+  text-align: right;
+  margin-top: -1.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  cursor: pointer;
+}
+.link--normal {
+  font-size: inherit !important;
 }
 
 .form-msg {

@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My list</title>  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>My list</title>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=0"/>
   <link rel="stylesheet" href="../styling/main.css">
   <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico">
   <script src="https://kit.fontawesome.com/558b08b205.js" crossorigin="anonymous"></script>
@@ -35,9 +39,9 @@
     <div class="cell cell-header item">Item/product</div>
     <div class="cell cell-header price">Price</div>
     <div class="cell cell-header location">Shop</div>
-    <div class="cell cell-header">Link/URL</div>
+    <div class="cell cell-header url">Link/URL</div>
     <div class="cell cell-header additional-info">Additional info</div>
-    <div class="cell cell-header additional-info">Edit/delete</div>
+    <div class="cell cell-header edit-delete">Edit/delete</div>
   </div>
 
 </div>
@@ -92,12 +96,38 @@
       <div class="form__close cross">&times;</div>
     </div>
     <div class="single-row-form">
-      <input class="input" id="input-email" type="email" placeholder="Enter email address here">
+      <select class="input" id="input-user">
+        <option value="" selected disabled hidden>Select contact</option>
+        <option value="Dan">Dan</option>
+        <option value="James">James</option>
+        <option value="Jan">Jan</option>
+        <option value="Julia">Julia</option>
+        <option value="Madelaine">Madelaine</option>
+        <option value="Maddy">Maddy</option>
+        <option value="Mark">Mark</option>
+
+      </select>
       <button class="btn btn-form-single-row" type="submit">Add</button>
     </div>
+    <div class="link link--right link--normal" id="link-new-email">Add contact not already in list</div>
     <h4 class="heading-4">List will be shared with the following contacts:</h4>
     <div class="email-list"></div>
-    <button type="button" class="btn btn--primary" id="btn-shareList">Send emails</button>
+    <button type="submit" class="btn btn--primary" id="btn-shareList">Send emails</button>
+  </form>
+</div>
+
+<div class="add-new-email display-none">
+  <div class="overlay form__close"></div>
+  <form class="form" id="new-email-form">
+    <div class="form-heading">
+      <h2 class="heading-2 header-add-email">Add new contact</h2>
+      <div class="form__close cross">&times;</div>
+    </div>
+    <div class="input-container">
+      <label for="input-new-email" class="form-label">Email address</label>
+      <input type="email" required autocomplete="off" class="form-input" name="input-new-email" id="input-new-email">
+    </div>
+    <button type="button" class="btn btn--primary" id="btn-add-email">Add email</button>
   </form>
 </div>
 
