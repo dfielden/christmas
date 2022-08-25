@@ -350,6 +350,8 @@ public class ChristmasListApplication {
         boolean defaultUser = db.isDefaultUser(sendToId);
 
         try {
+            System.out.println("attempt send");
+            System.out.println(sendTo);
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
             email.setFrom("giftandpresentideas@gmail.com");
