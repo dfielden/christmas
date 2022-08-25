@@ -24,7 +24,7 @@ public class CreateEmail {
                 "Go to <a href=\"giftandpresentideas.com\">giftandpresentideas.com</a> to view the list." +
                 "<br>" +
                 "<br>" +
-                "Please use the email address to which this email was send as your username when signing up (" + email + ")." +
+                "Please use the email address to which this email was sent as your username when signing up (" + email + ")." +
                 "<br>" +
                 "<br>" +
                 "If the URL does not work, please try copying and pasting it into your browser. If this still does not work, please contact Dan (dan@danfielden.com) for help.";
