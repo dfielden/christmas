@@ -1,5 +1,6 @@
 'use strict';
-
+const now = new Date().getTime();
+const threeMonths = 7889400000;
 import {AJAX, showFormMessage} from "./ajax.js";
 
 window.addEventListener('load', async (e) => {
@@ -20,8 +21,10 @@ window.addEventListener('load', async (e) => {
     }
 
     for (const id in sharedWithMe) {
-        const html = await generateListInfoSharedHtml(id, sharedWithMe[id]);
-        appendSharedWithMe(html);
+        if (now - sharedWithMe[id].timeCreated < threeMonths) {
+            const html = await generateListInfoSharedHtml(id, sharedWithMe[id]);
+            appendSharedWithMe(html);
+        }
     }
 
     document.querySelectorAll('.list-own').forEach(el => el.addEventListener('click', (e) => {
