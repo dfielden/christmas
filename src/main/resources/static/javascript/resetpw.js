@@ -15,7 +15,7 @@ const submitForm = async () => {
     const email = document.querySelector('#input-email').value;
 
     const data = await AJAX('/resetpw', {
-        email: email
+        email
     });
     showFormMessage(data, true, document.querySelector('.form'));
 }

@@ -384,8 +384,9 @@ public class ChristmasListApplication {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public String resetPassword(@RequestBody String email, HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        db.resetPassword(email);
-        return gson.toJson("Successfully reset pw for " + email);
+        String emailRemoveJson = email.substring(10, email.length()-2);
+        db.resetPassword(emailRemoveJson);
+        return gson.toJson("Successfully reset pw for " + emailRemoveJson);
     }
 
     @GetMapping("/login")
