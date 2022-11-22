@@ -374,6 +374,11 @@ public class ChristmasListApplication {
         return true;
     }
 
+    @GetMapping("/resetpw")
+    public String reset(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        return "resetpw";
+    }
+
     @ResponseBody
     @PostMapping(value="/resetpw",
             consumes = MediaType.APPLICATION_JSON_VALUE,
