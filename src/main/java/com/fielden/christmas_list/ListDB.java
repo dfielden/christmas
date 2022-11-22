@@ -646,7 +646,6 @@ public class ListDB {
     }
 
     public synchronized void resetPassword(String email) throws Exception {
-        System.out.println(email);
         String query = "UPDATE User SET " +
                 "salt = '', " +
                 "hashed_pw = '' " +
