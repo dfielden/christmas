@@ -374,6 +374,15 @@ public class ChristmasListApplication {
         return true;
     }
 
+    @ResponseBody
+    @PostMapping(value="/resetpw",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String resetPassword(@RequestBody String email, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        db.resetPassword(email);
+        return gson.toJson("Successfully reset pw for " + email);
+    }
+
     @GetMapping("/login")
     public String getLogin(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");

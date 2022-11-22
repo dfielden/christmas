@@ -46,6 +46,10 @@ window.addEventListener('load', async (e) => {
     const userName = await AJAX('/api/ownusername');
     document.querySelector('.heading-1').textContent = `Welcome, ${userName}`;
 
+    if (userName === 'Dan') {
+        document.querySelector(".nav-bar--right").innerHTML += '<a href="/resetpw"><li class="nav-item" id="resetpw"</li></a>';
+    }
+
 });
 
 

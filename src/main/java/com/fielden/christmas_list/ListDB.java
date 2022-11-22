@@ -645,7 +645,16 @@ public class ListDB {
         }
     }
 
-    public synchronized void addEmailUser(String email, int addedByUserId) {
+    public synchronized void resetPassword(String email) throws Exception {
+        String query = "UPDATE User SET " +
+                "salt = '', " +
+                "hashed_pw = '' " +
+                "WHERE email = email";
 
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.executeUpdate();
+        }
     }
+
 }
